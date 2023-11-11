@@ -1,35 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { Button, MenuItem } from "@mui/material";
+import { CustomSelect, CustomTextField } from "libs/ui";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <Button variant="contained" size="medium">
+          Label
+        </Button>
+        <Button variant="contained" size="large">
+          Label
+        </Button>
+        <Button variant="outlined" size="medium">
+          Label
+        </Button>
+        <Button variant="outlined" size="large">
+          Label
+        </Button>
+        <Button variant="text" size="medium">
+          Label
+        </Button>
+        <Button variant="text" size="large">
+          Label
+        </Button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div>
+        <Button variant="contained" color="inherit" size="medium">
+          Label
+        </Button>
+        <Button variant="contained" color="inherit" size="large">
+          Label
+        </Button>
+        <Button variant="outlined" color="inherit" size="medium">
+          Label
+        </Button>
+        <Button variant="outlined" color="inherit" size="large">
+          Label
+        </Button>
+        <Button size="medium" disabled>
+          Label
+        </Button>
+        <Button size="large" disabled>
+          Label
+        </Button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div>
+        <CustomTextField
+          label="Họ và tên"
+          textFieldProps={{ required: true, helperText: "Helper text" }}
+        ></CustomTextField>
+      </div>
+      <div>
+        <CustomSelect
+          label="Thành phố"
+          selectProps={{
+            required: true,
+            defaultValue: "",
+            displayEmpty: true,
+          }}
+          helperText="Helper text"
+        >
+          <MenuItem value="" disabled style={{ display: "none" }}>
+            Thành phố
+          </MenuItem>
+          <MenuItem value="hcm">Hồ Chí Minh</MenuItem>
+          <MenuItem value="hn">Hà Nội</MenuItem>
+        </CustomSelect>
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
