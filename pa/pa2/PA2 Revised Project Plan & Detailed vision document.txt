@@ -1,0 +1,5 @@
+Vision document version 1.1:
+- Added features: [User] Edit general information, [User] Change password, [User] Delete account
+- Removed feature: [User] Edit profile
+Revised Project Plan:
+Project plan document has not received any comments or feedback from TAs so it remains unchanged
