@@ -6,15 +6,15 @@ class UserService {
     }
 
     async SignUp(userInfo) {
-        const { name, email, password } = userInfo;
+        const { email, password, fullname, phone, role } = userInfo;
 
         try {
             const existingUser = await this.repository.findUser({ email });
 
-            if(existingUser.length > 0) {
+            if (existingUser.length > 0) {
                 throw new Error('User already exists');
             } else {
-                const user = await this.repository.createUser({ name, email, password });
+                const user = await this.repository.createUser({ email, password, fullname, phone, role });
                 return user;
             }
         } catch (err) {

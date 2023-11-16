@@ -5,8 +5,8 @@ module.exports = (app) => {
 
     app.post("/SignUp", async (req, res) => {
         try {
-            const { name, email, password } = req.body;
-            const { data } = await service.SignUp({ name, email, password });
+            const { email, password, fullname, phone, role } = req.body;
+            const { data } = await service.SignUp({ email, password, fullname, phone, role });
             return res.json(data);
         } catch (err) {
             return res.status(500).json({ message: 'User Already Exists' });
