@@ -5,11 +5,7 @@ const mongoose = require('mongoose');
 
 const TableSchema = new mongoose.Schema({
     id_shop: Object,
-    type: 
-    {
-        size: Number, // Number of seats
-        num: Number // Number of tables
-    }
+    type: Number
 }, {
     versionKey: false
 });
