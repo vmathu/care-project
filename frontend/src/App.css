@@ -1,9 +1,5 @@
 #root {
   width: 100%;
-  margin: 0 5rem;
-  @media screen and (max-width: 600px) {
-    margin: 0 1rem;
-  }
 }
 
 .logo {
@@ -14,7 +10,7 @@
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em hsla(237, 100%, 70%, 0.667));
 }
 
 .logo.react:hover {
