@@ -18,9 +18,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true, 
+    "noFallthroughCasesInSwitch": true,
     "paths": {
-      "libs/*": ["./src/libs/*"]
+      "libs/*": ["./src/libs/*"],
+      "assets/*": ["./src/assets/*"]
     }
   },
   "include": ["src"],
