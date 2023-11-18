@@ -101,6 +101,22 @@ const theme = createTheme({
         },
       },
     },
+    MuiTypography: {
+      styleOverrides: {
+        h4: {
+          fontWeight: "700",
+        },
+        h5: {
+          fontWeight: "700",
+        },
+      },
+    },
+    MuiRating: {
+      styleOverrides: {
+        root: { color: "#EFD36E" },
+        iconEmpty: { color: "#E6E6E6" },
+      },
+    },
   },
 });
 

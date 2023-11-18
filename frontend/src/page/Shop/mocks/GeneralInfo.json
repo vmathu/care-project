@@ -1,0 +1,18 @@
+{
+  "name": "Vòm Coffee",
+  "bookings": 213,
+  "rate": 4.3,
+  "address": {
+    "street": "1 Đường số 3o82, Phường ZZZZ",
+    "district": "ZZZ",
+    "city": "TP.HCM"
+  },
+  "phone": "0912 123 123",
+  "time": {
+    "open": "0:00",
+    "close": "21:00"
+  },
+  "price": 56000,
+  "parking": true,
+  "tags": ["Check in", "Học bài", "Quận 5"]
+}
