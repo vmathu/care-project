@@ -1,10 +1,9 @@
 import React, { useState, FormEvent } from 'react';
 import { AppBar, Toolbar, TextField, Box, useTheme, useMediaQuery, styled, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate, Link } from 'react-router-dom';
 import LogoText from '../../../assets/app-logo-text.svg';
-import { useNavigate } from 'react-router-dom';
 import Avatar from './Avatar';
-import { Link } from 'react-router-dom';
 import colors from '../color';
 
 const Search = styled('div')(({ theme }) => ({
