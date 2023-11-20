@@ -1,5 +1,5 @@
 const { UserRepository } = require('../database')
-
+const ResponedData  = require('../utils/ResponedData');
 class UserService {
     constructor() {
         this.repository = new UserRepository();
@@ -12,13 +12,16 @@ class UserService {
             const existingUser = await this.repository.findUser({ email });
 
             if (existingUser.length > 0) {
-                throw new Error('User already exists');
+                throw {message: 'Đã có tài khoản sử dụng email này', status: 409}
             } else {
                 const user = await this.repository.createUser({ email, password, fullname, phone, role });
-                return user;
+                if (!user)
+                    throw {message: 'Gặp lỗi khi tạo tài khoản', status: 409}
+                else
+                    return ResponedData(user, 'Tạo tài khoản thành công', 200);
             }
         } catch (err) {
-            console.log('UserService.SignUp', err);
+            return ResponedData(null, err.message, 409);
         }
     }
 

@@ -3,22 +3,20 @@ const UserService = require('../service/UserService');
 module.exports = (app) => {
     const service = new UserService();
 
-    app.post("/SignUp", async (req, res) => {
+    app.post("/register", async (req, res, next) => {
         try {
             const { email, password, fullname, phone, role } = req.body;
-            const { data } = await service.SignUp({ email, password, fullname, phone, role });
+            if (!email || !password || !fullname || !phone || !role) {
+                throw { message: 'Thiếu thông tin ', status: 400 };
+            }
+            const data  = await service.SignUp({ email, password, fullname, phone, role });
             return res.json(data);
         } catch (err) {
-            return res.status(500).json({ message: 'User Already Exists' });
+            res.status(err.status).json({ message: err.message });
         }
     })
 
-    app.get("/getAllUsers", async (req, res) => {
-        try {
-            const data = await service.getAllUsers();
-            return res.status(200).json(data);
-        } catch (err) {
-            return res.status(500).json({ message: 'Error' });
-        }
-    })
+    app.use((req, res, next) => {
+        res.status(404).json({ message: 'API not found' });
+    });
 }
