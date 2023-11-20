@@ -38,6 +38,13 @@ export default function Card({ title, address, priceRange, rating, imageUrl }: C
             overflow: 'hidden',
             textOverflow: 'ellipsis'
         },
+        priceTypography: {
+            color: colors.orange500,
+            fontWeight: '600',
+            whiteSpace: 'nowrap' as 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+        },
     };
 
     const [isHeartClicked, setHeartClicked] = useState(false);
@@ -59,26 +66,13 @@ export default function Card({ title, address, priceRange, rating, imageUrl }: C
         }
     }
 
-    const PriceTypography = () => (
-        <Typography variant="body2" sx={{
-            color: colors.orange500,
-            fontWeight: '600',
-            whiteSpace: 'nowrap' as 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-        }}>{priceRange}</Typography>
-    );
-
     const RatingStars = () => (
-        [...Array(5)].map((_, i) => {
-            if (i < fullStars) {
-                return <Star key={i} type="full" />;
-            } else if (i === fullStars && halfStar) {
-                return <Star key={i} type="half" />;
-            } else {
-                return <Star key={i} type="empty" />;
-            }
-        })
+        [...Array(5)].map((_, i) => (
+            <Star
+                key={i}
+                type={i < fullStars ? "full" : i === fullStars && halfStar ? "half" : "empty"}
+            />
+        ))
     );
 
     return (
@@ -96,7 +90,7 @@ export default function Card({ title, address, priceRange, rating, imageUrl }: C
                 </div>
             </div>
             <div className="price-rating-row" style={styles.priceRatingRow}>
-                <PriceTypography />
+                <Typography variant="body2" sx={styles.priceTypography}>{priceRange}</Typography>
                 <div style={styles.flexRow}>
                     <RatingStars />
                     <Typography variant="body2" style={styles.ratingText}>{rating}</Typography>
