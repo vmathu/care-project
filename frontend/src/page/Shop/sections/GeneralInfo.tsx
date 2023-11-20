@@ -27,28 +27,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     gap: "1rem",
   },
-}));
-
-const Root = styled("div")(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  gap: "1rem",
-}));
-
-const Title = styled("div")(({ theme }) => ({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "flex-end",
-  [theme.breakpoints.down("sm")]: {
-    alignItems: "flex-start",
-  },
-}));
-
-const Info = styled("div")(({ theme }) => ({
-  display: "flex",
-  gap: "1rem",
-  [theme.breakpoints.down("sm")]: {
-    gap: ".5rem",
+  rate: {
+    color: color.black300,
+    display: "flex",
+    gap: "1rem",
+    alignItems: "center",
   },
 }));
 

@@ -1,10 +1,13 @@
-import { Breadcrumbs, Grid, Typography } from "@mui/material";
+import { Breadcrumbs, Divider, Grid, Rating, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { makeStyles } from "@mui/styles";
+import { makeStyles, styled } from "@mui/styles";
 
 import ImagePreviewer from "./sections/ImagePreviewer";
 import GeneralInfo from "./sections/GeneralInfo";
 import color from "libs/ui/color";
+
+import data from "./mocks/GeneralInfo.json";
+import CustomRating from "./components/CustomRating";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -41,7 +44,16 @@ export default function Shop() {
           <GeneralInfo />
         </Grid>
       </Grid>
-      <Typography variant="h5">Thông tin</Typography>
+      <Grid container spacing={2}>
+        <Grid item md={6}>
+          <Typography variant="h5">Thông tin</Typography>
+          <Typography variant="body1">{data.description}</Typography>
+        </Grid>
+        <Grid item md={1} xs={0}></Grid>
+        <Grid item md={5}>
+          <CustomRating value={data.rate} />
+        </Grid>
+      </Grid>
     </div>
   );
 }
