@@ -8,12 +8,12 @@ import { useMediaQuery } from '@mui/material';
 export default function Footer() {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const footerStyle = {
+    const footerStyle: React.CSSProperties = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: isMobile ? 'center' : 'flex-start',
-        padding: '20px',
-        paddingLeft: isMobile ? '20px' : '80px',
+        padding: isMobile ? '16px' : '20px',
+        paddingLeft: isMobile ? '16px' : '80px',
         backgroundColor: colors.orange800,
         width: '100%',
         height: isMobile ? '110px' : '80px',
