@@ -31,7 +31,7 @@ export default function Card({ title, address, priceRange, rating, imageUrl }: C
         body1: { margin: 0, marginRight: '10px', fontWeight: 'bold' },
         priceRatingRow: { display: 'flex', justifyContent: 'space-between', paddingTop: '12px' },
         ratingText: {
-            marginLeft: '8px',
+            marginLeft: '4px',
             fontWeight: '600',
             color: colors.black200,
             whiteSpace: 'nowrap' as 'nowrap',
