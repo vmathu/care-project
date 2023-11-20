@@ -1,12 +1,12 @@
 import { ReactComponentElement } from "react"
 
 export interface SignUpFormValues {
-    fullName: string, 
-    Email: string 
-    phoneNumber: string,
-    Password: string,
+    fullname: string, 
+    email: string 
+    phone: string,
+    password: string,
     ConfirmPassword: string,
-    Role: number,
+    role: string,
 }
 
 export interface SignUpFormProps {
@@ -15,4 +15,15 @@ export interface SignUpFormProps {
     label: string,
     placeHolder: string,
     icon: ReactComponentElement<any>,
+}
+
+export interface RegisterData {
+    fullname: string, 
+    email: string 
+    phone: string,
+    password: string,
+    ConfirmPassword: string,
+    role: string,
+    status: string,
+    favorite: [],
 }

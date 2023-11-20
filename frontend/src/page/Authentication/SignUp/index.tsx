@@ -1,20 +1,24 @@
-import { useState } from 'react'
-import { Button, MenuItem, Grid, useMediaQuery, useTheme, InputAdornment, Typography } from '@mui/material'
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'libs/redux/store';
+import { setToast } from 'libs/redux/slice/toastSlice';
+
+import { Button, MenuItem, Grid, useMediaQuery, useTheme, InputAdornment } from '@mui/material'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import RegisterBackGround from '../../../assets/authen_background.svg'
 import AppLogo from '../../../assets/app-logo.svg'
+
+import Toast from 'libs/ui/components/CustomToast';
 import { CustomTextField, CustomSelect } from 'libs/ui';
 import { doPost } from 'libs/utils/axios';
 
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 
-import { Role } from '../../../enum/enum'
-
-import { SignUpFormProps, SignUpFormValues } from './interface'
+import { SignUpFormProps, SignUpFormValues, RegisterData } from './interface'
 
 import Steps from './Component/stepper'
 
@@ -24,39 +28,40 @@ export default function SignUp() {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
     const [step, setStep] = useState(0)
-    const [errorMessage, setErrorMessage] = useState("")
+    const toast = useSelector((state:RootState) => state.toastReducer)
+    const dispatch = useDispatch<AppDispatch>()
 
     const PersonalInfoField: SignUpFormProps[] = [
-        { header: "Họ và tên", name: "fullName", label: "", placeHolder: "", icon: <PersonOutlineOutlinedIcon /> },
-        { header: "Email", name: "Email", label: "", placeHolder: "", icon: <EmailOutlinedIcon /> },
-        { header: "Số điện thoại", name: "phoneNumber", label: "", placeHolder: "", icon: <LocalPhoneOutlinedIcon /> },
+        { header: "Họ và tên", name: "fullname", label: "", placeHolder: "", icon: <PersonOutlineOutlinedIcon /> },
+        { header: "Email", name: "email", label: "", placeHolder: "", icon: <EmailOutlinedIcon /> },
+        { header: "Số điện thoại", name: "phone", label: "", placeHolder: "", icon: <LocalPhoneOutlinedIcon /> },
     ]
 
     const PasswordField: SignUpFormProps[] = [
-        { header: "Mật khẩu", name: "Password", label: "", placeHolder: "", icon: <LockOutlinedIcon /> },
+        { header: "Mật khẩu", name: "password", label: "", placeHolder: "", icon: <LockOutlinedIcon /> },
         { header: "Nhập lại mật khẩu", name: "ConfirmPassword", label: "", placeHolder: "", icon: <LockOutlinedIcon /> },
     ]
 
     const RoleField: Partial<SignUpFormProps>[] = [
-        { header: "Vai trò", name: "Role", label: "", placeHolder: "" },
+        { header: "Vai trò", name: "role", label: "", placeHolder: "" },
     ]
 
     const validationSchema: Yup.ObjectSchema<SignUpFormValues> = Yup.object({
-        fullName: Yup.string().required('Không được bỏ trống'),
-        Email: Yup.string().email('Sai định dạng mail').required('Bắt buộc nhập email').max(255),
-        phoneNumber: Yup.string().required('Không được bỏ trống').max(255),
-        Password: Yup.string().required('Bắt buộc nhập mật khẩu').max(255).min(8, 'Mật khẩu phải có ít nhất 8 kí tự'),
-        ConfirmPassword: Yup.string().required('Bắt buộc xác nhận').oneOf([Yup.ref('Password')], 'Mật khẩu không trùng khớp').max(255),
-        Role: Yup.number().oneOf([Role.Admin, Role.User, Role.Shop]).required('*')
+        fullname: Yup.string().required('Không được bỏ trống'),
+        email: Yup.string().email('Sai định dạng mail').required('Bắt buộc nhập email').max(255),
+        phone: Yup.string().required('Không được bỏ trống').max(255),
+        password: Yup.string().required('Bắt buộc nhập mật khẩu').max(255).min(8, 'Mật khẩu phải có ít nhất 8 kí tự'),
+        ConfirmPassword: Yup.string().required('Bắt buộc xác nhận').oneOf([Yup.ref('password')], 'Mật khẩu không trùng khớp').max(255),
+        role: Yup.string().oneOf(["admin", "user", "shop"]).required('*')
     })
 
     const initialState: SignUpFormValues = {
-        fullName: "",
-        Email: "",
-        phoneNumber: "",
-        Password: "",
+        fullname: "",
+        email: "",
+        phone: "",
+        password: "",
         ConfirmPassword: "",
-        Role: 0
+        role: "",
     }
 
     const formData = useFormik({
@@ -65,7 +70,7 @@ export default function SignUp() {
         validateOnChange: true,
         validateOnMount: true,
         enableReinitialize: true,
-        initialErrors: { Email: 'Email is required' },
+        initialErrors: { email: 'Email is required' },
         onSubmit: () => {
         }
     })
@@ -80,19 +85,30 @@ export default function SignUp() {
         if (step > 0) {
             setStep((cur) => cur - 1)
         }
-        setErrorMessage("")
     }
 
     const handleFinish = () => {
-        doPost('SignUp', formData.values)
+        const data: RegisterData = {...formData.values, status: "active", favorite: []}
+
+        doPost('register', data)
             .then(async res => {
-                alert(res?.data.message)
+                const resData = res.data;
+                if(resData.status != 200)
+                    throw {message: resData.message, status: resData.status}
+                else {
+                    dispatch(setToast({ ...toast, open: true, message: resData.message, title: "Success!", type: 'success' }))
+                    setTimeout(() => {
+                        window.location.href = '/SignIn'
+                    }, 3000)
+                }
             })
             .catch(err => {
-                setErrorMessage(err?.response.data.message)
+                if(err.status == 400 || err.status == 500)
+                    window.location.href = `/${err.status}`
+                else
+                    dispatch(setToast({ ...toast, open: true, message: err.message, title: 'Error', type: 'error' }))
             })
     }
-
 
     return (
         <Grid container columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} style={{ width: '100vw' }}>
@@ -185,19 +201,19 @@ export default function SignUp() {
                                     required: true,
                                     displayEmpty: true,
                                     fullWidth: true,
-                                    value: formData.values.Role,
+                                    value: formData.values.role,
                                     onChange: formData.handleChange
                                 }}
                             >
-                                <MenuItem value={0} disabled style={{ display: "none" }}>
+                                <MenuItem value={""} disabled style={{ display: "none" }}>
                                     Vai trò
                                 </MenuItem>
 
-                                <MenuItem value={Role.User}>
+                                <MenuItem value={"user"}>
                                     Khách hàng
                                 </MenuItem>
 
-                                <MenuItem value={Role.Shop}>
+                                <MenuItem value={"shop"}>
                                     Chủ quán
                                 </MenuItem>
                             </CustomSelect>
@@ -234,9 +250,7 @@ export default function SignUp() {
                         </Button>
                     }
                 </div>
-                <Typography variant='body2' color='error' component='p' style={{ marginTop: '16px' }}>
-                    {errorMessage}
-                </Typography>
+                <Toast />
                 {step === 0 &&
                     <p style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                         Bạn đã có tài khoản?
