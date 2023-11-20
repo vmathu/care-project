@@ -4,6 +4,8 @@ import colors from '../color';
 import StarIcon from '@mui/icons-material/Star';
 import StarHalfIcon from '@mui/icons-material/StarHalf';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 interface CardProps {
     title: string;
@@ -27,6 +29,15 @@ export default function Card({ title, address, priceRange, rating, imageUrl }: C
         button: { margin: 0, padding: 0 },
         caption: { color: colors.black200, fontSize: '12px', fontWeight: 'bold' },
         body1: { margin: 0, marginRight: '10px', fontWeight: 'bold' },
+        priceRatingRow: { display: 'flex', justifyContent: 'space-between', paddingTop: '12px' },
+        ratingText: {
+            marginLeft: '8px',
+            fontWeight: '600',
+            color: colors.black200,
+            whiteSpace: 'nowrap' as 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+        },
     };
 
     const [isHeartClicked, setHeartClicked] = useState(false);
@@ -48,6 +59,28 @@ export default function Card({ title, address, priceRange, rating, imageUrl }: C
         }
     }
 
+    const PriceTypography = () => (
+        <Typography variant="body2" sx={{
+            color: colors.orange500,
+            fontWeight: '600',
+            whiteSpace: 'nowrap' as 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+        }}>{priceRange}</Typography>
+    );
+
+    const RatingStars = () => (
+        [...Array(5)].map((_, i) => {
+            if (i < fullStars) {
+                return <Star key={i} type="full" />;
+            } else if (i === fullStars && halfStar) {
+                return <Star key={i} type="half" />;
+            } else {
+                return <Star key={i} type="empty" />;
+            }
+        })
+    );
+
     return (
         <div className="card" style={styles.card}>
             <img src={imageUrl} alt="Card image" style={styles.image} />
@@ -55,39 +88,18 @@ export default function Card({ title, address, priceRange, rating, imageUrl }: C
                 <div className="title-row" style={styles.flexRow}>
                     <Typography variant="body1" style={{ ...styles.body1, ...styles.textOverflow }}>{title}</Typography>
                     <button style={styles.button} onClick={handleHeartClick}>
-                        {isHeartClicked ? '❤️' : '🤍'}
+                        {isHeartClicked ? <FavoriteIcon sx={{ color: colors.orange500 }} /> : <FavoriteBorderIcon />}
                     </button>
                 </div>
                 <div style={styles.textOverflow}>
                     <Typography variant="caption" style={styles.caption}>{address}</Typography>
                 </div>
             </div>
-            <div className="price-rating-row" style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '12px' }}>
-                <Typography variant="body2" sx={{
-                    color: colors.orange500,
-                    fontWeight: '600',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                }}>{priceRange}</Typography>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {[...Array(5)].map((_, i) => {
-                        if (i < fullStars) {
-                            return <Star key={i} type="full" />;
-                        } else if (i === fullStars && halfStar) {
-                            return <Star key={i} type="half" />;
-                        } else {
-                            return <Star key={i} type="empty" />;
-                        }
-                    })}
-                    <Typography variant="body2" style={{
-                        marginLeft: '8px',
-                        fontWeight: '600',
-                        color: colors.black200,
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                    }}>{rating}</Typography>
+            <div className="price-rating-row" style={styles.priceRatingRow}>
+                <PriceTypography />
+                <div style={styles.flexRow}>
+                    <RatingStars />
+                    <Typography variant="body2" style={styles.ratingText}>{rating}</Typography>
                 </div>
             </div>
         </div>
