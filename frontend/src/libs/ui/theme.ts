@@ -1,7 +1,8 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { colors } from "./index";
 
-const theme = createTheme({
+const defaultTheme = createTheme({});
+let theme = createTheme({
   palette: {
     primary: {
       main: colors.orange500,
@@ -102,12 +103,31 @@ const theme = createTheme({
       },
     },
     MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          caption: "div",
+        },
+      },
       styleOverrides: {
+        h1: {
+          fontWeight: "600",
+        },
+        h2: {
+          fontWeight: "700",
+        },
+        h3: {
+          fontWeight: "700",
+        },
         h4: {
           fontWeight: "700",
         },
         h5: {
           fontWeight: "700",
+        },
+        body1: {
+          [defaultTheme.breakpoints.down("sm")]: {
+            fontSize: "0.875rem",
+          },
         },
       },
     },
@@ -119,5 +139,7 @@ const theme = createTheme({
     },
   },
 });
+
+theme = responsiveFontSizes(theme);
 
 export default theme;

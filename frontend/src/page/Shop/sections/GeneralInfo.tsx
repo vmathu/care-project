@@ -13,7 +13,7 @@ import color from "libs/ui/color";
 
 import data from "../mocks/GeneralInfo.json";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",

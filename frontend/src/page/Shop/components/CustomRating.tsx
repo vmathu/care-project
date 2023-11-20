@@ -48,7 +48,7 @@ const RatingItem = styled("div")(() => ({
   alignItems: "center",
 }));
 
-const RatingBackground = styled("div")(() => ({
+const RatingBackground = styled("div")(({ theme }) => ({
   width: "100%",
   background: color.black50,
   height: "20px",

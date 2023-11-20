@@ -44,6 +44,16 @@ export default function Shop() {
           <GeneralInfo />
         </Grid>
       </Grid>
+      <Typography variant="h1">heading 1</Typography>
+      <Typography variant="h2">heading 2</Typography>
+      <Typography variant="h3">heading 3</Typography>
+      <Typography variant="h4">heading 4</Typography>
+      <Typography variant="h5">heading 5</Typography>
+      <Typography variant="h6">heading 6</Typography>
+      <Typography variant="subtitle1">subtitle 1</Typography>
+      <Typography variant="subtitle2">subtitle 2</Typography>
+      <Typography variant="body1">body 1</Typography>
+      <Typography variant="body2">body 2</Typography>
       <Grid container spacing={2}>
         <Grid item md={6}>
           <Typography variant="h5">Thông tin</Typography>
