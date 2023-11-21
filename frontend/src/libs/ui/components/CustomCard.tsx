@@ -3,9 +3,12 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { colors } from "..";
-import { Rating } from "@mui/material";
+import { IconButton, Rating } from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useState } from "react";
 
-const cardFooter: React.CSSProperties = {
+const spaceBetween: React.CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
@@ -30,23 +33,36 @@ export const CustomCard = ({
   price,
   rating,
 }: Props) => {
+  const [favState, setFavState] = useState(false);
+  const handleFavClick = () => {
+    setFavState(!favState);
+  };
   return (
     <Card>
       <CardMedia component="img" alt={fullname} height="204" image={img[0]} />
       <CardContent>
-        <Typography
-          gutterBottom
-          variant="body1"
-          component="div"
-          sx={{ fontWeight: "bold" }}
-        >
-          {fullname}
-        </Typography>
+        <div style={{ ...spaceBetween }}>
+          <Typography
+            gutterBottom
+            variant="body1"
+            component="div"
+            sx={{ fontWeight: "bold" }}
+          >
+            {fullname}
+          </Typography>
+          <IconButton onClick={handleFavClick}>
+            {favState ? (
+              <FavoriteIcon sx={{ color: colors.orange500 }} />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
+          </IconButton>
+        </div>
         <Typography noWrap variant="caption" color="text.secondary">
           {address.street}, {address.district}, {address.city}
         </Typography>
       </CardContent>
-      <div style={{ ...cardFooter }}>
+      <div style={{ ...spaceBetween }}>
         <Typography
           variant="body2"
           sx={{ fontWeight: "600", color: colors.orange500 }}
