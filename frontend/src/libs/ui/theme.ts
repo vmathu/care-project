@@ -162,6 +162,13 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          minHeight: "0 !important",
+        },
+      },
+    },
   },
 });
 

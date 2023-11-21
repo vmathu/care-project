@@ -1,4 +1,4 @@
-import { CustomCard, colors } from "libs/ui";
+import { CustomCard, colors, SearchAppBar, Footer } from "libs/ui";
 import { Search, Tag } from "./components";
 import { styled } from "@mui/material/styles";
 import { Grid } from "@mui/material";
@@ -115,6 +115,7 @@ const shops: Props[] = [
 export default function SearchPage() {
   return (
     <div style={{ ...rootStyle }}>
+      <SearchAppBar />
       <div style={{ ...recStyle }}></div>
       <Search />
       <Tags>
@@ -135,6 +136,9 @@ export default function SearchPage() {
           </Grid>
         ))}
       </ShopGrid>
+      <div style={{ marginTop: "60px" }}>
+        <Footer />
+      </div>
     </div>
   );
 }
