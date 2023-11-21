@@ -15,8 +15,79 @@ theme = createTheme(theme, {
   },
   typography: {
     fontFamily: '"Be Vietnam Pro", san-serif',
+    caption: {
+      fontSize: "12px",
+    },
+    h1: {
+      fontWeight: "600",
+    },
+    h2: {
+      fontWeight: "700",
+    },
+    h3: {
+      fontWeight: "700",
+    },
+    h4: {
+      fontWeight: "700",
+    },
+    h5: {
+      fontWeight: "700",
+    },
+    body1: {
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "0.875rem",
+      },
+    },
   },
   components: {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Be Vietnam Pro", san-serif',
+        },
+        gutterBottom: {
+          marginBottom: "4px",
+        },
+      },
+      defaultProps: {
+        variantMapping: {
+          caption: "div",
+        },
+      },
+    },
+    MuiChip: {
+      variants: [
+        {
+          props: { variant: "filled" },
+          style: {
+            "&:hover": {
+              background: colors.black50,
+            },
+          },
+        },
+        {
+          props: { variant: "text" },
+          style: {
+            background: "none",
+            "&:hover": {
+              background: "none",
+              color: colors.black400,
+            },
+          },
+        },
+      ],
+      styleOverrides: {
+        root: {
+          fontSize: "1rem",
+          fontWeight: 600,
+          color: colors.black200,
+          [theme.breakpoints.down("sm")]: {
+            fontSize: "11.2px",
+            fontWeight: "500",
+          },
+        },
+      },
+    },
     MuiButton: {
       variants: [
         {
@@ -102,38 +173,6 @@ theme = createTheme(theme, {
         },
       },
     },
-    MuiTypography: {
-      defaultProps: {
-        variantMapping: {
-          caption: "div",
-        },
-      },
-      styleOverrides: {
-        root: {
-          fontFamily: '"Be Vietnam Pro", san-serif',
-        },
-        h1: {
-          fontWeight: "600",
-        },
-        h2: {
-          fontWeight: "700",
-        },
-        h3: {
-          fontWeight: "700",
-        },
-        h4: {
-          fontWeight: "700",
-        },
-        h5: {
-          fontWeight: "700",
-        },
-        body1: {
-          [theme.breakpoints.down("sm")]: {
-            fontSize: "0.875rem",
-          },
-        },
-      },
-    },
     MuiRating: {
       styleOverrides: {
         root: { color: "#EFD36E" },
@@ -152,9 +191,36 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
+        },
+      },
+    },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          padding: "12px 0",
+        },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          minHeight: "0 !important",
+        },
+      },
+    },
   },
 });
 
 theme = responsiveFontSizes(theme);
+
+declare module "@mui/material/Chip" {
+  interface ChipPropsVariantOverrides {
+    text: true;
+  }
+}
 
 export default theme;

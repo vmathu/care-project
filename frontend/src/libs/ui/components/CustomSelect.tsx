@@ -6,7 +6,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 import colors from "../color";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 const style: React.CSSProperties = {
   display: "flex",
@@ -21,6 +21,7 @@ type Props = {
   containerStyle?: React.CSSProperties;
   selectProps?: SelectProps;
   helperText?: string;
+  rootStyle?: React.CSSProperties;
 };
 
 export const CustomSelect: React.FC<Props> = ({
@@ -29,9 +30,10 @@ export const CustomSelect: React.FC<Props> = ({
   containerStyle,
   selectProps,
   helperText,
+  rootStyle,
 }: Props) => {
   return (
-    <FormControl>
+    <FormControl sx={{ ...rootStyle }}>
       <div style={{ ...style, ...containerStyle }}>
         <Typography color={colors.black500} style={{ fontWeight: "bold" }}>
           {label}{" "}

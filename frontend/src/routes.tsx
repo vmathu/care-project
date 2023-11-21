@@ -20,8 +20,12 @@ const routes: RouteObject[] = [
     Component: lazy(() => import("./page/Home")),
   },
   {
-    path: "/Shop/:shopId",
     Component: lazy(() => import("./page/Shop")),
+    path: "/Shop/:shopId",
+  },
+  {
+    path: "/Search",
+    Component: lazy(() => import("./page/Search")),
   },
   {
     path: "/Errors",
