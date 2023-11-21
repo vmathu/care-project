@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { colors } from "./index";
 
 let theme = createTheme();
@@ -18,6 +18,26 @@ theme = createTheme(theme, {
     caption: {
       fontSize: "12px",
     },
+    h1: {
+      fontWeight: "600",
+    },
+    h2: {
+      fontWeight: "700",
+    },
+    h3: {
+      fontWeight: "700",
+    },
+    h4: {
+      fontWeight: "700",
+    },
+    h5: {
+      fontWeight: "700",
+    },
+    body1: {
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "0.875rem",
+      },
+    },
   },
   components: {
     MuiTypography: {
@@ -27,6 +47,11 @@ theme = createTheme(theme, {
         },
         gutterBottom: {
           marginBottom: "4px",
+        },
+      },
+      defaultProps: {
+        variantMapping: {
+          caption: "div",
         },
       },
     },
@@ -148,6 +173,24 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiRating: {
+      styleOverrides: {
+        root: { color: "#EFD36E" },
+        iconEmpty: { color: "#E6E6E6" },
+      },
+    },
+    MuiGrid: {
+      styleOverrides: {
+        item: { width: "100%" },
+      },
+    },
+    MuiTabPanel: {
+      styleOverrides: {
+        root: {
+          padding: "0px",
+        },
+      },
+    },
     MuiCard: {
       styleOverrides: {
         root: {
@@ -171,6 +214,8 @@ theme = createTheme(theme, {
     },
   },
 });
+
+theme = responsiveFontSizes(theme);
 
 declare module "@mui/material/Chip" {
   interface ChipPropsVariantOverrides {
