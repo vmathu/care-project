@@ -1,7 +1,8 @@
 import { createTheme } from "@mui/material/styles";
 import { colors } from "./index";
 
-const theme = createTheme({
+let theme = createTheme();
+theme = createTheme(theme, {
   palette: {
     primary: {
       main: colors.orange500,
@@ -14,8 +15,54 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: '"Be Vietnam Pro", san-serif',
+    caption: {
+      fontSize: "12px",
+    },
   },
   components: {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Be Vietnam Pro", san-serif',
+        },
+        gutterBottom: {
+          marginBottom: "4px",
+        },
+      },
+    },
+    MuiChip: {
+      variants: [
+        {
+          props: { variant: "filled" },
+          style: {
+            "&:hover": {
+              background: colors.black50,
+            },
+          },
+        },
+        {
+          props: { variant: "text" },
+          style: {
+            background: "none",
+            "&:hover": {
+              background: "none",
+              color: colors.black400,
+            },
+          },
+        },
+      ],
+      styleOverrides: {
+        root: {
+          fontSize: "1rem",
+          fontWeight: 600,
+          color: colors.black200,
+          [theme.breakpoints.down("sm")]: {
+            fontSize: "11.2px",
+            fontWeight: "500",
+          },
+        },
+      },
+    },
     MuiButton: {
       variants: [
         {
@@ -101,7 +148,27 @@ const theme = createTheme({
         },
       },
     },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
+        },
+      },
+    },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          padding: "12px 0",
+        },
+      },
+    },
   },
 });
+
+declare module "@mui/material/Chip" {
+  interface ChipPropsVariantOverrides {
+    text: true;
+  }
+}
 
 export default theme;
