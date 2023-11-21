@@ -1,69 +1,92 @@
-import { Breadcrumbs, Divider, Grid, Rating, Typography } from "@mui/material";
+import {
+  Breadcrumbs,
+  Grid,
+  Hidden,
+  Typography,
+  Tab,
+  styled,
+} from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { useParams } from "react-router-dom";
-import { makeStyles, styled } from "@mui/styles";
+import { useState } from "react";
 
-import ImagePreviewer from "./sections/ImagePreviewer";
-import GeneralInfo from "./sections/GeneralInfo";
+import { ImagePreviewer, GeneralInfo, Menu, Reviews } from "./sections";
+import { CustomRating } from "./components";
+
 import color from "libs/ui/color";
 
 import data from "./mocks/GeneralInfo.json";
-import CustomRating from "./components/CustomRating";
+import Description from "./sections/Description";
 
-const useStyles = makeStyles(() => ({
-  root: {
-    fontFamily: "Be Vietnam Pro",
-    display: "flex",
-    flexDirection: "column",
-    gap: "40px",
-  },
-  bc: {
-    color: color.black300,
-  },
-  bcPrimary: {
-    fontWeight: "bold !important",
+const bcStyle: React.CSSProperties = {
+  color: color.black300,
+};
+const bcPrimaryStyle: React.CSSProperties = {
+  fontWeight: "700",
+};
+const Root = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: "2.5rem",
+  [theme.breakpoints.down("sm")]: {
+    gap: "1.5rem",
   },
 }));
 
 export default function Shop() {
   const { shopId } = useParams();
-  const classes = useStyles();
+  const [tab, setTab] = useState("1");
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setTab(newValue);
+  };
 
   return (
-    <div className={classes.root}>
-      <Breadcrumbs>
-        <Typography className={classes.bc}>Quận 5</Typography>
-        <Typography className={classes.bc}>Học bài</Typography>
-        <Typography className={classes.bcPrimary}>Vòm Coffee</Typography>
-      </Breadcrumbs>
+    <Root>
+      <Hidden smDown>
+        <Breadcrumbs>
+          <Typography style={{ ...bcStyle }}>Quận 5</Typography>
+          <Typography style={{ ...bcStyle }}>Học bài</Typography>
+          <Typography style={{ ...bcPrimaryStyle }}>Vòm Coffee</Typography>
+        </Breadcrumbs>
+      </Hidden>
       <Grid container spacing={2}>
         <Grid item md={6}>
           <ImagePreviewer />
         </Grid>
-        <Grid item md={1} xs={0}></Grid>
+        <Hidden smDown>
+          <Grid item md={1}></Grid>
+        </Hidden>
         <Grid item md={5}>
           <GeneralInfo />
         </Grid>
       </Grid>
-      <Typography variant="h1">heading 1</Typography>
-      <Typography variant="h2">heading 2</Typography>
-      <Typography variant="h3">heading 3</Typography>
-      <Typography variant="h4">heading 4</Typography>
-      <Typography variant="h5">heading 5</Typography>
-      <Typography variant="h6">heading 6</Typography>
-      <Typography variant="subtitle1">subtitle 1</Typography>
-      <Typography variant="subtitle2">subtitle 2</Typography>
-      <Typography variant="body1">body 1</Typography>
-      <Typography variant="body2">body 2</Typography>
       <Grid container spacing={2}>
         <Grid item md={6}>
-          <Typography variant="h5">Thông tin</Typography>
-          <Typography variant="body1">{data.description}</Typography>
+          <TabContext value={tab}>
+            <TabList onChange={handleChange}>
+              <Tab label="Thông tin" value="1" />
+              <Tab label="Menu" value="2" />
+              <Tab label="Đánh giá" value="3" />
+            </TabList>
+            <TabPanel value="1">
+              <Description data={data.description} />
+            </TabPanel>
+            <TabPanel value="2">
+              <Menu />
+            </TabPanel>
+            <TabPanel value="3">
+              <Reviews />
+            </TabPanel>
+          </TabContext>
         </Grid>
-        <Grid item md={1} xs={0}></Grid>
+        <Hidden smDown>
+          <Grid item md={1}></Grid>
+        </Hidden>
         <Grid item md={5}>
           <CustomRating value={data.rate} />
         </Grid>
       </Grid>
-    </div>
+    </Root>
   );
 }

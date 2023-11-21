@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@mui/styles";
-import { Typography, Rating, Button } from "@mui/material";
+import { Typography, Rating, Button, styled } from "@mui/material";
 import {
   LocationOnRounded,
   LocalPhoneRounded,
@@ -14,16 +14,6 @@ import color from "libs/ui/color";
 import data from "../mocks/GeneralInfo.json";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1rem",
-  },
-  title: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-  },
   tag: {
     color: color.black200,
     backgroundColor: color.black25,
@@ -37,21 +27,42 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     gap: "1rem",
   },
-  rate: {
-    color: color.black300,
-    display: "flex",
-    gap: "1rem",
-    alignItems: "center",
+}));
+
+const Root = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: "1rem",
+}));
+
+const Title = styled("div")(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "flex-end",
+  [theme.breakpoints.down("sm")]: {
+    alignItems: "flex-start",
   },
-  infoList: {
-    display: "flex",
-    flexDirection: "column",
+}));
+
+const Info = styled("div")(({ theme }) => ({
+  display: "flex",
+  gap: "1rem",
+  [theme.breakpoints.down("sm")]: {
     gap: ".5rem",
   },
-  info: {
-    display: "flex",
-    gap: "1rem",
-  },
+}));
+
+const InfoList = styled("div")(() => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: ".5rem",
+}));
+
+const Rate = styled("div")(() => ({
+  color: color.black300,
+  display: "flex",
+  gap: ".5rem",
+  alignItems: "center",
 }));
 
 const TagList = () => {
@@ -108,29 +119,29 @@ export default function GeneralInfo() {
         previousValue + currentValue * (currentIndex + 1)
     ) / total;
   return (
-    <div className={classes.root}>
+    <Root>
       <TagList />
-      <div className={classes.title}>
+      <Title>
         <div>
           <Typography variant="h4">{data.name}</Typography>
-          <div className={classes.rate}>
+          <Rate>
             <Typography variant="caption">
               {Math.floor(sum * 10) / 10}/5
             </Typography>
             <Rating size="small" readOnly defaultValue={sum} precision={0.1} />
             <Typography variant="caption">{data.bookings} lượt đặt</Typography>
-          </div>
+          </Rate>
         </div>
         <Button variant="text">Report</Button>
-      </div>
-      <div className={classes.infoList}>
+      </Title>
+      <InfoList>
         {infoList.map((info) => (
-          <div className={classes.info}>
+          <Info>
             {info.icon}
             <Typography variant="body1">{info.title}</Typography>
-          </div>
+          </Info>
         ))}
-      </div>
+      </InfoList>
       {/* <div>
         <Button variant="outlined">2 chỗ</Button>
         <Button variant="outlined">4 chỗ</Button>
@@ -139,6 +150,6 @@ export default function GeneralInfo() {
       <Button variant="contained" size="large">
         ĐẶT NGAY
       </Button> */}
-    </div>
+    </Root>
   );
 }

@@ -1,5 +1,5 @@
 import { Typography, Divider, Rating } from "@mui/material";
-import { makeStyles, styled } from "@mui/styles";
+import { styled } from "@mui/material/styles";
 import color from "libs/ui/color";
 
 type RatingBarProps = {
@@ -10,28 +10,35 @@ type DivProps = {
   value: number;
 };
 
-const useStyles = makeStyles(() => ({
-  rating: {
+const Root = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: "1rem",
+  padding: "40px 0px",
+  [theme.breakpoints.down("sm")]: {
+    gap: "0.5rem",
+    padding: "0px",
+  },
+}));
+
+const RatingStar = styled(Rating)(({ theme }) => ({
+  [theme.breakpoints.up("sm")]: {
     "& .MuiSvgIcon-root": {
-      width: "60px",
-      height: "60px",
+      width: "3rem",
+      height: "3rem",
     },
   },
 }));
 
-const Root = styled("div")(() => ({
+const RatingArea = styled("div")(({ theme }) => ({
   display: "flex",
   gap: "1rem",
   alignSelf: "center",
   flexDirection: "column-reverse",
   width: "100%",
-}));
-
-const RatingArea = styled("div")(() => ({
-  display: "flex",
-  flexDirection: "column",
-  gap: "1rem",
-  padding: "40px 0px",
+  [theme.breakpoints.down("sm")]: {
+    gap: ".5rem",
+  },
 }));
 
 const RatingTitle = styled("div")(() => ({
@@ -40,12 +47,15 @@ const RatingTitle = styled("div")(() => ({
   alignItems: "flex-end",
 }));
 
-const RatingItem = styled("div")(() => ({
+const RatingItem = styled("div")(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   gap: "1rem",
   color: color.black200,
   alignItems: "center",
+  [theme.breakpoints.down("sm")]: {
+    gap: ".25rem",
+  },
 }));
 
 const RatingBackground = styled("div")(({ theme }) => ({
@@ -53,6 +63,9 @@ const RatingBackground = styled("div")(({ theme }) => ({
   background: color.black50,
   height: "20px",
   borderRadius: "4px",
+  [theme.breakpoints.down("sm")]: {
+    height: ".75rem",
+  },
 }));
 
 const RatingBar = styled("div")(({ value }: DivProps) => ({
@@ -87,7 +100,6 @@ function nFormatter(num: number) {
 }
 
 export default function CustomRating(value: RatingBarProps) {
-  const classes = useStyles();
   const total = value?.value.reduce(
     (previousValue, currentValue) => previousValue + currentValue
   );
@@ -98,19 +110,13 @@ export default function CustomRating(value: RatingBarProps) {
     ) / total;
   console.log(sum);
   return (
-    <RatingArea>
+    <Root>
       <RatingTitle>
-        <Rating
-          className={classes.rating}
-          size="large"
-          defaultValue={sum}
-          readOnly
-          precision={0.1}
-        />
+        <RatingStar size="large" defaultValue={sum} readOnly precision={0.1} />
         <Typography variant="h4">{Math.floor(sum * 10) / 10}</Typography>
       </RatingTitle>
       <Divider />
-      <Root>
+      <RatingArea>
         {value?.value.map((item, index) => (
           <RatingItem>
             <Typography style={{ width: "20px" }}>{index + 1}</Typography>
@@ -122,7 +128,7 @@ export default function CustomRating(value: RatingBarProps) {
             </Typography>
           </RatingItem>
         ))}
-      </Root>
-    </RatingArea>
+      </RatingArea>
+    </Root>
   );
 }

@@ -1,8 +1,8 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { colors } from "./index";
 
-const defaultTheme = createTheme({});
-let theme = createTheme({
+let theme = createTheme();
+theme = createTheme(theme, {
   palette: {
     primary: {
       main: colors.orange500,
@@ -109,6 +109,9 @@ let theme = createTheme({
         },
       },
       styleOverrides: {
+        root: {
+          fontFamily: '"Be Vietnam Pro", san-serif',
+        },
         h1: {
           fontWeight: "600",
         },
@@ -125,7 +128,7 @@ let theme = createTheme({
           fontWeight: "700",
         },
         body1: {
-          [defaultTheme.breakpoints.down("sm")]: {
+          [theme.breakpoints.down("sm")]: {
             fontSize: "0.875rem",
           },
         },
@@ -135,6 +138,18 @@ let theme = createTheme({
       styleOverrides: {
         root: { color: "#EFD36E" },
         iconEmpty: { color: "#E6E6E6" },
+      },
+    },
+    MuiGrid: {
+      styleOverrides: {
+        item: { width: "100%" },
+      },
+    },
+    MuiTabPanel: {
+      styleOverrides: {
+        root: {
+          padding: "0px",
+        },
       },
     },
   },
