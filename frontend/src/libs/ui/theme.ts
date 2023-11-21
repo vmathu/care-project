@@ -173,12 +173,6 @@ theme = createTheme(theme, {
         },
       },
     },
-    MuiRating: {
-      styleOverrides: {
-        root: { color: "#EFD36E" },
-        iconEmpty: { color: "#E6E6E6" },
-      },
-    },
     MuiGrid: {
       styleOverrides: {
         item: { width: "100%" },
@@ -205,11 +199,10 @@ theme = createTheme(theme, {
         },
       },
     },
-    MuiToolbar: {
+    MuiRating: {
       styleOverrides: {
-        root: {
-          minHeight: "0 !important",
-        },
+        root: { color: "#EFD36E" },
+        iconEmpty: { color: "#E6E6E6" },
       },
     },
   },
