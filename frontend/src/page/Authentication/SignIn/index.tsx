@@ -1,5 +1,5 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from 'libs/redux/store';
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'libs/redux/store';
 import { setToast } from 'libs/redux/slice/toastSlice';
 
 import { Button, Grid, useMediaQuery, useTheme, InputAdornment } from '@mui/material'
@@ -15,16 +15,17 @@ import { doPost } from 'libs/utils/axios';
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 
+import { saveLoginData, checkLoginToken } from 'libs/utils/sessionHelper';
 import { SignInFormProps, SignInFormValues } from '../interface'
 
 import Quote from '../Component/quote';
 
 
 export default function SignUp() {
+    if(checkLoginToken()) window.location.href = '/'
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
-    const toast = useSelector((state: RootState) => state.toastReducer)
     const dispatch = useDispatch<AppDispatch>()
 
     const logInField: SignInFormProps[] = [
@@ -53,27 +54,23 @@ export default function SignUp() {
         }
     })
 
-    const handleFinish = () => {
-        // const data: RegisterData = { ...formData.values, status: "active", favorite: [] }
-
-        // doPost('register', data)
-        //     .then(async res => {
-        //         const resData = res.data;
-        //         if (resData.status != 200)
-        //             throw { message: resData.message, status: resData.status }
-        //         else {
-        //             dispatch(setToast({ ...toast, open: true, message: resData.message, title: "Success!", type: 'success' }))
-        //             setTimeout(() => {
-        //                 window.location.href = '/SignIn'
-        //             }, 3000)
-        //         }
-        //     })
-        //     .catch(err => {
-        //         if (err.status == 400 || err.status == 500)
-        //             window.location.href = `/${err.status}`
-        //         else
-        //             dispatch(setToast({ ...toast, open: true, message: err.message, title: 'Error', type: 'error' }))
-        //     })
+    const handleFinish = async () => {
+        const data = formData.values
+        const result = await doPost('user/login', data)
+        if (result.status == 200) {
+            dispatch(setToast({
+                open: true,
+                message: 'Đăng nhập thành công',
+                type: 'success'
+            }))
+            saveLoginData(result.data.data)
+        } else {
+            dispatch(setToast({
+                open: true,
+                message: result.data.message,
+                type: 'error'
+            }))
+        }
     }
 
     return (
