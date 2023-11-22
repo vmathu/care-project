@@ -138,11 +138,18 @@ theme = createTheme(theme, {
             },
           },
         },
+        {
+          props: { size: "large" },
+          style: {
+            fontWeight: 700,
+          }
+        }
       ],
       styleOverrides: {
         root: {
           boxShadow: "none",
           textTransform: "inherit",
+          fontFamily: '"Be Vietnam Pro", san-serif',
           "&.Mui-disabled": {
             background: colors.black50,
             color: colors.black200,

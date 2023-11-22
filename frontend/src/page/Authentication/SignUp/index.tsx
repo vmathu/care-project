@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from 'libs/redux/store';
 import { setToast } from 'libs/redux/slice/toastSlice';
 
@@ -8,6 +9,9 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import DoneIcon from '@mui/icons-material/Done';
 import RegisterBackGround from '../../../assets/authen_background.svg'
 import AppLogo from '../../../assets/app-logo.svg'
 
@@ -18,17 +22,19 @@ import { doPost } from 'libs/utils/axios';
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 
-import { SignUpFormProps, SignUpFormValues, RegisterData } from './interface'
+import { SignUpFormProps, SignUpFormValues } from '../interface'
 
-import Steps from './Component/stepper'
+import Steps from '../Component/stepper'
+import Quote from '../Component/quote';
 
 
 export default function SignUp() {
+    const navigate = useNavigate()
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
     const [step, setStep] = useState(0)
-    const toast = useSelector((state:RootState) => state.toastReducer)
+    const toast = useSelector((state: RootState) => state.toastReducer)
     const dispatch = useDispatch<AppDispatch>()
 
     const PersonalInfoField: SignUpFormProps[] = [
@@ -88,38 +94,65 @@ export default function SignUp() {
     }
 
     const handleFinish = () => {
-        const data: RegisterData = {...formData.values, status: "active", favorite: []}
+        const data = formData.values
 
-        doPost('register', data)
+        doPost('user/register', data)
             .then(async res => {
                 const resData = res.data;
-                if(resData.status != 200)
-                    throw {message: resData.message, status: resData.status}
+                if (resData.status != 200)
+                    throw { message: resData.message, status: resData.status }
                 else {
                     dispatch(setToast({ ...toast, open: true, message: resData.message, title: "Success!", type: 'success' }))
                     setTimeout(() => {
-                        window.location.href = '/SignIn'
+                        navigate('/SignIn')
                     }, 3000)
                 }
             })
             .catch(err => {
-                if(err.status == 400 || err.status == 500)
-                    window.location.href = `/${err.status}`
-                else
-                    dispatch(setToast({ ...toast, open: true, message: err.message, title: 'Error', type: 'error' }))
+                const errInfo = err.response.data
+                if (err.status == 400 || err.status == 500)
+                    navigate(`/${err.status}`)
+                else 
+                    dispatch(setToast({ ...toast, open: true, message: errInfo.message, title: 'Error', type: 'error' }))
             })
     }
 
     return (
         <Grid container columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} style={{ width: '100vw' }}>
             {!isMobile &&
-                <Grid item lg={6} md={4} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <img src={RegisterBackGround} alt="RB" />
+                <Grid item lg={6} md={4} sm={3}>
+                    <div style={{
+                        position: 'relative',
+                        height: 'calc(100vh - 0.5rem)',
+                        width: '100%'
+                    }}>
+                        <img
+                            src={RegisterBackGround}
+                            alt="RB"
+                            height="100%"
+                            width="100%"
+                            style={{ objectFit: 'cover' }}
+                        />
+                        <div style={{
+                            position: 'absolute',
+                            bottom: '20px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                        }}>
+                            <Quote />
+                        </div>
+                    </div>
                 </Grid>
             }
 
             <Grid item lg={4} xs={4} style={{ display: 'flex', flexDirection: 'column', margin: '0 auto 0 auto' }}>
-                <img src={AppLogo} alt="ap-logo" style={{ width: 'fit-content', margin: '16px auto 40px auto' }} />
+                <img
+                    src={AppLogo}
+                    alt="ap-logo"
+                    style={{
+                        width: 'fit-content',
+                        margin: '16px auto 40px auto'
+                    }} />
                 <Steps currStep={step} />
                 {step === 0 &&
                     <>
@@ -221,12 +254,18 @@ export default function SignUp() {
                     )
                 })}
 
-                <div style={{ display: 'flex', justifyContent: step === 0 ? 'flex-end' : 'space-between' }}>
+                <div style={{
+                    display: 'flex',
+                    justifyContent: step === 0 ? 'flex-end' : 'space-between',
+                    gap: '16px'
+                }}>
                     {step > 0 &&
                         <Button
                             onClick={back}
                             variant='contained'
-                            style={{ width: isMobile ? '100%' : '40%', marginRight: '16px', marginTop: '16px' }}
+                            size='large'
+                            style={{ width: '100%', marginTop: '16px' }}
+                            startIcon={<ArrowBackIosNewIcon />}
                         >
                             Quay lại
                         </Button>
@@ -235,9 +274,11 @@ export default function SignUp() {
                         <Button
                             onClick={next}
                             variant='contained'
-                            style={{ width: isMobile ? '100%' : '40%', marginTop: '16px' }}
+                            size='large'
+                            style={{ width: '100%', marginTop: '16px' }}
+                            endIcon={<ArrowForwardIosIcon />}
                         >
-                            Tiếp theo
+                            Tiếp theo 
                         </Button>
                     }
                     {step === 2 &&
@@ -245,7 +286,8 @@ export default function SignUp() {
                             onClick={handleFinish}
                             disabled={!formData.isValid}
                             variant='contained'
-                            style={{ width: isMobile ? '100%' : '40%', marginTop: '16px' }}
+                            style={{ width: '100%', marginTop: '16px' }}
+                            endIcon={<DoneIcon />}
                         >Hoàn thành
                         </Button>
                     }
@@ -254,8 +296,11 @@ export default function SignUp() {
                 {step === 0 &&
                     <p style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                         Bạn đã có tài khoản?
-                        <a href='/SignIn' style={{ color: 'orange' }}> Đăng nhập</a>
-                    </p>}
+                        <a href='/SignIn' style={{ color: 'orange' }}>
+                            Đăng nhập
+                        </a>
+                    </p>
+                }
             </Grid>
         </Grid>
     )

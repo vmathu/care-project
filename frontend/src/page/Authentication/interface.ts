@@ -17,13 +17,12 @@ export interface SignUpFormProps {
     icon: ReactComponentElement<any>,
 }
 
-export interface RegisterData {
-    fullname: string, 
-    email: string 
-    phone: string,
+
+export interface SignInFormValues {
+    email: string,
     password: string,
-    ConfirmPassword: string,
-    role: string,
-    status: string,
-    favorite: [],
+}
+
+export interface SignInFormProps extends SignUpFormProps{
+    name: keyof SignInFormValues,
 }
