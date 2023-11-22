@@ -27,12 +27,6 @@ a:hover {
 
 body {
   margin: 0;
-<<<<<<< HEAD
-  display: flex;
-  place-items: top;
-=======
-
->>>>>>> f870fa6 (add: navbar, app-logo-text, demo avatar)
   min-width: 320px;
   min-height: 100vh;
 }
