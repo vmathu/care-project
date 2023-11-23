@@ -1,9 +1,9 @@
-import LetterAvatars from 'libs/ui/components/Avatar'
+import { SearchAppBar } from 'libs/ui/components/NavBar'
 
 export default function HomePage() {
   return (
     <div>
-      <LetterAvatars />
+      <SearchAppBar />
     </div>
   )
 }
