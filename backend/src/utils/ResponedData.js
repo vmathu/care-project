@@ -1,3 +1,4 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 const RespondData = (data, message, status) => {
@@ -18,8 +19,9 @@ const RespondStatus = {
 }
 
 const GenerateToken = (user) => {
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, { expiresIn: '5h' });
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '5h' });
     return token;
 }
 module.exports.RespondData = RespondData;
 module.exports.RespondStatus = RespondStatus;
+module.exports.GenerateToken = GenerateToken;

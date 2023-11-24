@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const { UserRepository } = require('../database')
 const RespondData = require('../utils/ResponedData').RespondData;
 const RespondStatus = require('../utils/ResponedData').RespondStatus;
+const GenerateToken = require('../utils/ResponedData').GenerateToken;
 const saltRounds = 10;
 class UserService {
     constructor() {
@@ -36,7 +37,14 @@ class UserService {
             } else {
                 const match = bcrypt.compareSync(password, user[0].password);
                 if (match) {
-                    return RespondData(user[0], 'Đăng nhập thành công', RespondStatus.SUCCESS);
+                    const token = GenerateToken(user[0]);
+                    return RespondData({
+                        token,
+                        user: {
+                            id: user[0]._id,
+                            role: user[0].role,  
+                        }
+                    }, 'Đăng nhập thành công', RespondStatus.SUCCESS);
                 } else {
                     throw { message: 'Mật khẩu không chính xác', status: RespondStatus.UNAUTHORIZED }
                 }
