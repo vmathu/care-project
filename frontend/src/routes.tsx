@@ -28,6 +28,10 @@ const routes: RouteObject[] = [
     Component: lazy(() => import("./page/Search")),
   },
   {
+    path: "/Profile",
+    Component: lazy(() => import("./page/Profile")),
+  },
+  {
     path: "/Errors",
     children: [
       {

@@ -212,6 +212,20 @@ theme = createTheme(theme, {
         iconEmpty: { color: "#E6E6E6" },
       },
     },
+    MuiTablePagination: {
+      styleOverrides: {
+        spacer: {
+          display: "none"
+        },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          justifyContent: "center"
+        },
+      },
+    },
   },
 });
 
