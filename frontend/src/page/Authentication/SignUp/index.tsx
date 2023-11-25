@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from 'libs/redux/store';
 import { setToast } from 'libs/redux/slice/toastSlice';
 
-import { Button, MenuItem, Grid, useMediaQuery, useTheme, InputAdornment } from '@mui/material'
+import { Button, MenuItem, Grid, useMediaQuery, useTheme, InputAdornment, CircularProgress } from '@mui/material'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
@@ -23,13 +22,18 @@ import * as Yup from 'yup'
 import { useFormik } from 'formik'
 
 import { SignUpFormProps, SignUpFormValues } from '../interface'
+import { checkLoginToken } from 'libs/utils/sessionHelper';
 
 import Steps from '../Component/stepper'
 import Quote from '../Component/quote';
 
 
 export default function SignUp() {
-    const navigate = useNavigate()
+    const [loading, setLoading] = useState(true)
+    useEffect(() => {
+        if (checkLoginToken()) window.location.href = '/'
+        setLoading(false)
+    })
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -104,204 +108,218 @@ export default function SignUp() {
                 else {
                     dispatch(setToast({ ...toast, open: true, message: resData.message, title: "Success!", type: 'success' }))
                     setTimeout(() => {
-                        navigate('/SignIn')
+                        window.location.href = '/SignIn'
                     }, 3000)
                 }
             })
             .catch(err => {
                 const errInfo = err.response.data
                 if (err.status == 400 || err.status == 500)
-                    navigate(`/${err.status}`)
-                else 
+                    window.location.href = `/Errors/${err.status}`
+                else
                     dispatch(setToast({ ...toast, open: true, message: errInfo.message, title: 'Error', type: 'error' }))
             })
     }
 
     return (
-        <Grid container columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} style={{ width: '100vw' }}>
-            {!isMobile &&
-                <Grid item lg={6} md={4} sm={3}>
-                    <div style={{
-                        position: 'relative',
-                        height: 'calc(100vh - 0.5rem)',
-                        width: '100%'
-                    }}>
-                        <img
-                            src={RegisterBackGround}
-                            alt="RB"
-                            height="100%"
-                            width="100%"
-                            style={{ objectFit: 'cover' }}
-                        />
+        { loading }
+            ?
+            <CircularProgress
+            size={100}
+                color='primary'
+                sx={
+                    {
+                        position: 'absolute',
+                        top: '45%',
+                        left: '48%',
+                    }
+                }
+            />
+            :
+            <Grid container columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} style={{ width: '100vw' }}>
+                {!isMobile &&
+                    <Grid item lg={6} md={4} sm={3}>
                         <div style={{
-                            position: 'absolute',
-                            bottom: '20px',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
+                            position: 'relative',
+                            height: 'calc(100vh - 0.5rem)',
+                            width: '100%'
                         }}>
-                            <Quote />
+                            <img
+                                src={RegisterBackGround}
+                                alt="RB"
+                                height="100%"
+                                width="100%"
+                                style={{ objectFit: 'cover' }}
+                            />
+                            <div style={{
+                                position: 'absolute',
+                                bottom: '20px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                            }}>
+                                <Quote />
+                            </div>
                         </div>
-                    </div>
-                </Grid>
-            }
-
-            <Grid item lg={4} xs={4} style={{ display: 'flex', flexDirection: 'column', margin: '0 auto 0 auto' }}>
-                <img
-                    src={AppLogo}
-                    alt="ap-logo"
-                    style={{
-                        width: 'fit-content',
-                        margin: '16px auto 40px auto'
-                    }} />
-                <Steps currStep={step} />
-                {step === 0 &&
-                    <>
-                        <h3 style={{ margin: '16px auto 0 auto' }}>Thông tin cá nhân</h3>
-                        {PersonalInfoField.map((item: SignUpFormProps) => {
-                            const { values, handleChange, errors, touched, handleBlur } = formData
-                            return (
-                                <CustomTextField
-                                    label={item.header}
-                                    textFieldProps={{
-                                        name: item.name,
-                                        required: true,
-                                        fullWidth: true,
-                                        error: !!errors[item.name] && !!touched[item.name],
-                                        helperText: (errors[item.name] && touched[item.name] && errors[item.name]),
-                                        InputLabelProps: { shrink: true },
-                                        defaultValue: values[item.name],
-                                        onBlur: handleBlur,
-                                        onChange: handleChange,
-                                        variant: 'outlined',
-                                        InputProps: {
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    {item.icon}
-                                                </InputAdornment>
-                                            )
-                                        },
-                                        style: { marginBottom: '16px' }
-                                    }}
-                                />
-                            )
-                        })}
-                    </>
+                    </Grid>
                 }
 
-                {step === 1 &&
-                    <>
-                        <h3 style={{ margin: '16px auto 0 auto' }}>Nhập mật khẩu</h3>
-                        {PasswordField.map((item: SignUpFormProps) => {
-                            const { values, handleChange, errors, touched, handleBlur } = formData
-                            return (
-                                <CustomTextField
-                                    label={item.header}
-                                    textFieldProps={{
-                                        name: item.name,
-                                        required: true,
-                                        fullWidth: true,
-                                        error: !!errors[item.name] && !!touched[item.name],
-                                        helperText: (errors[item.name] && touched[item.name] && errors[item.name]),
-                                        InputLabelProps: { shrink: true },
-                                        defaultValue: values[item.name],
-                                        onBlur: handleBlur,
-                                        onChange: handleChange,
-                                        variant: 'outlined',
-                                        type: 'password',
-                                        InputProps: {
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    {item.icon}
-                                                </InputAdornment>
-                                            )
-                                        },
-                                        style: { marginBottom: '16px' }
-                                    }}
-                                />
-                            )
-                        })}
-                    </>
-                }
-
-                {step === 2 && RoleField.map((item: Partial<SignUpFormProps>) => {
-                    return (
+                <Grid item lg={4} xs={4} style={{ display: 'flex', flexDirection: 'column', margin: '0 auto 0 auto' }}>
+                    <img
+                        src={AppLogo}
+                        alt="ap-logo"
+                        style={{
+                            width: 'fit-content',
+                            margin: '16px auto 40px auto'
+                        }} />
+                    <Steps currStep={step} />
+                    {step === 0 &&
                         <>
-                            <h3 style={{ margin: '16px auto 0 auto' }}>{item.header}* </h3>
-                            <CustomSelect
-                                label='Chọn Vai trò'
-                                selectProps={{
-                                    name: item.name,
-                                    required: true,
-                                    displayEmpty: true,
-                                    fullWidth: true,
-                                    value: formData.values.role,
-                                    onChange: formData.handleChange
-                                }}
-                            >
-                                <MenuItem value={""} disabled style={{ display: "none" }}>
-                                    Vai trò
-                                </MenuItem>
-
-                                <MenuItem value={"user"}>
-                                    Khách hàng
-                                </MenuItem>
-
-                                <MenuItem value={"shop"}>
-                                    Chủ quán
-                                </MenuItem>
-                            </CustomSelect>
+                            <h3 style={{ margin: '16px auto 0 auto' }}>Thông tin cá nhân</h3>
+                            {PersonalInfoField.map((item: SignUpFormProps) => {
+                                const { values, handleChange, errors, touched, handleBlur } = formData
+                                return (
+                                    <CustomTextField
+                                        label={item.header}
+                                        textFieldProps={{
+                                            name: item.name,
+                                            required: true,
+                                            fullWidth: true,
+                                            error: !!errors[item.name] && !!touched[item.name],
+                                            helperText: (errors[item.name] && touched[item.name] && errors[item.name]),
+                                            InputLabelProps: { shrink: true },
+                                            defaultValue: values[item.name],
+                                            onBlur: handleBlur,
+                                            onChange: handleChange,
+                                            variant: 'outlined',
+                                            InputProps: {
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        {item.icon}
+                                                    </InputAdornment>
+                                                )
+                                            },
+                                            style: { marginBottom: '16px' }
+                                        }}
+                                    />
+                                )
+                            })}
                         </>
-                    )
-                })}
+                    }
 
-                <div style={{
-                    display: 'flex',
-                    justifyContent: step === 0 ? 'flex-end' : 'space-between',
-                    gap: '16px'
-                }}>
-                    {step > 0 &&
-                        <Button
-                            onClick={back}
-                            variant='contained'
-                            size='large'
-                            style={{ width: '100%', marginTop: '16px' }}
-                            startIcon={<ArrowBackIosNewIcon />}
-                        >
-                            Quay lại
-                        </Button>
+                    {step === 1 &&
+                        <>
+                            <h3 style={{ margin: '16px auto 0 auto' }}>Nhập mật khẩu</h3>
+                            {PasswordField.map((item: SignUpFormProps) => {
+                                const { values, handleChange, errors, touched, handleBlur } = formData
+                                return (
+                                    <CustomTextField
+                                        label={item.header}
+                                        textFieldProps={{
+                                            name: item.name,
+                                            required: true,
+                                            fullWidth: true,
+                                            error: !!errors[item.name] && !!touched[item.name],
+                                            helperText: (errors[item.name] && touched[item.name] && errors[item.name]),
+                                            InputLabelProps: { shrink: true },
+                                            defaultValue: values[item.name],
+                                            onBlur: handleBlur,
+                                            onChange: handleChange,
+                                            variant: 'outlined',
+                                            type: 'password',
+                                            InputProps: {
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        {item.icon}
+                                                    </InputAdornment>
+                                                )
+                                            },
+                                            style: { marginBottom: '16px' }
+                                        }}
+                                    />
+                                )
+                            })}
+                        </>
                     }
-                    {step < 2 &&
-                        <Button
-                            onClick={next}
-                            variant='contained'
-                            size='large'
-                            style={{ width: '100%', marginTop: '16px' }}
-                            endIcon={<ArrowForwardIosIcon />}
-                        >
-                            Tiếp theo 
-                        </Button>
+
+                    {step === 2 && RoleField.map((item: Partial<SignUpFormProps>) => {
+                        return (
+                            <>
+                                <h3 style={{ margin: '16px auto 0 auto' }}>{item.header}* </h3>
+                                <CustomSelect
+                                    label='Chọn Vai trò'
+                                    selectProps={{
+                                        name: item.name,
+                                        required: true,
+                                        displayEmpty: true,
+                                        fullWidth: true,
+                                        value: formData.values.role,
+                                        onChange: formData.handleChange
+                                    }}
+                                >
+                                    <MenuItem value={""} disabled style={{ display: "none" }}>
+                                        Vai trò
+                                    </MenuItem>
+
+                                    <MenuItem value={"user"}>
+                                        Khách hàng
+                                    </MenuItem>
+
+                                    <MenuItem value={"shop"}>
+                                        Chủ quán
+                                    </MenuItem>
+                                </CustomSelect>
+                            </>
+                        )
+                    })}
+
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: step === 0 ? 'flex-end' : 'space-between',
+                        gap: '16px'
+                    }}>
+                        {step > 0 &&
+                            <Button
+                                onClick={back}
+                                variant='contained'
+                                size='large'
+                                style={{ width: '100%', marginTop: '16px' }}
+                                startIcon={<ArrowBackIosNewIcon />}
+                            >
+                                Quay lại
+                            </Button>
+                        }
+                        {step < 2 &&
+                            <Button
+                                onClick={next}
+                                variant='contained'
+                                size='large'
+                                style={{ width: '100%', marginTop: '16px' }}
+                                endIcon={<ArrowForwardIosIcon />}
+                            >
+                                Tiếp theo
+                            </Button>
+                        }
+                        {step === 2 &&
+                            <Button
+                                onClick={handleFinish}
+                                disabled={!formData.isValid}
+                                variant='contained'
+                                style={{ width: '100%', marginTop: '16px' }}
+                                endIcon={<DoneIcon />}
+                            >Hoàn thành
+                            </Button>
+                        }
+                    </div>
+                    <Toast />
+                    {step === 0 &&
+                        <p style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+                            Bạn đã có tài khoản?
+                            <a href='/SignIn' style={{ color: 'orange' }}>
+                                Đăng nhập
+                            </a>
+                        </p>
                     }
-                    {step === 2 &&
-                        <Button
-                            onClick={handleFinish}
-                            disabled={!formData.isValid}
-                            variant='contained'
-                            style={{ width: '100%', marginTop: '16px' }}
-                            endIcon={<DoneIcon />}
-                        >Hoàn thành
-                        </Button>
-                    }
-                </div>
-                <Toast />
-                {step === 0 &&
-                    <p style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                        Bạn đã có tài khoản?
-                        <a href='/SignIn' style={{ color: 'orange' }}>
-                            Đăng nhập
-                        </a>
-                    </p>
-                }
+                </Grid>
             </Grid>
-        </Grid>
     )
 }

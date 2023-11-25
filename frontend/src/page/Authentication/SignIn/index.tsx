@@ -1,8 +1,9 @@
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'libs/redux/store';
 import { setToast } from 'libs/redux/slice/toastSlice';
 
-import { Button, Grid, useMediaQuery, useTheme, InputAdornment } from '@mui/material'
+import { Button, Grid, useMediaQuery, useTheme, InputAdornment, CircularProgress } from '@mui/material'
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import RegisterBackGround from '../../../assets/authen_background.svg'
@@ -21,8 +22,13 @@ import { SignInFormProps, SignInFormValues } from '../interface'
 import Quote from '../Component/quote';
 
 
-export default function SignUp() {
-    if(checkLoginToken()) window.location.href = '/'
+export default function SignIn() {
+    const [loading, setLoading] = useState(true)
+    useEffect(() => {
+        if (checkLoginToken()) window.location.href = '/'
+        setLoading(false)
+    })
+
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -74,87 +80,100 @@ export default function SignUp() {
     }
 
     return (
-        <Grid container columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} style={{ width: '100vw' }}>
-            {!isMobile &&
-                <Grid item lg={6} md={4} sm={3}>
-                    <div style={{
-                        position: 'relative',
-                        height: 'calc(100vh - 0.5rem)',
-                        width: '100%'
-                    }}>
-                        <img
-                            src={RegisterBackGround}
-                            alt="RB"
-                            height="100%"
-                            width="100%"
-                            style={{ objectFit: 'cover' }}
-                        />
+        loading ?
+            <CircularProgress
+                size={100}
+                color='primary'
+                sx={
+                    {
+                        position: 'absolute',
+                        top: '45%',
+                        left: '48%',
+                    }
+                }
+            />
+            :
+            <Grid container columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} style={{ width: '100vw' }}>
+                {!isMobile &&
+                    <Grid item lg={6} md={4} sm={3}>
                         <div style={{
-                            position: 'absolute',
-                            bottom: '20px',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
+                            position: 'relative',
+                            height: 'calc(100vh - 0.5rem)',
+                            width: '100%'
                         }}>
-                            <Quote />
+                            <img
+                                src={RegisterBackGround}
+                                alt="RB"
+                                height="100%"
+                                width="100%"
+                                style={{ objectFit: 'cover' }}
+                            />
+                            <div style={{
+                                position: 'absolute',
+                                bottom: '20px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                            }}>
+                                <Quote />
+                            </div>
                         </div>
-                    </div>
-                </Grid>
-            }
+                    </Grid>
+                }
 
-            <Grid item lg={4} xs={4} style={{ display: 'flex', flexDirection: 'column', margin: '0 auto 0 auto' }}>
-                <img
-                    src={AppLogo}
-                    alt="ap-logo"
-                    style={{
-                        width: 'fit-content',
-                        margin: '16px auto 40px auto'
-                    }} />
-                <h3 style={{ margin: '16px auto 0 auto' }}>Thông tin tài khoản</h3>
-                {logInField.map((item: SignInFormProps) => {
-                    const { values, handleChange, errors, touched, handleBlur } = formData
-                    return (
-                        <CustomTextField
-                            label={item.header}
-                            textFieldProps={{
-                                name: item.name,
-                                required: true,
-                                fullWidth: true,
-                                error: !!errors[item.name] && !!touched[item.name],
-                                helperText: (errors[item.name] && touched[item.name] && errors[item.name]),
-                                InputLabelProps: { shrink: true },
-                                defaultValue: values[item.name],
-                                onBlur: handleBlur,
-                                onChange: handleChange,
-                                variant: 'outlined',
-                                InputProps: {
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            {item.icon}
-                                        </InputAdornment>
-                                    )
-                                },
-                                style: { marginBottom: '16px' },
-                                type: item.name == 'password' ? 'password' : 'text'
-                            }}
-                        />
-                    )
-                })}
-                <Button
-                    onClick={handleFinish}
-                    disabled={!formData.isValid}
-                    variant='contained'
-                    style={{ width: '100%', marginTop: '16px' }}
-                >
-                    Đăng nhập
-                </Button>
-                <Toast />
-                <p style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                    Bạn chưa có tài khoản?
-                    <a href='/SignUp' style={{ color: 'orange' }}>
-                        Đăng ký
-                    </a>
-                </p>
+                <Grid item lg={4} xs={4} style={{ display: 'flex', flexDirection: 'column', margin: '0 auto 0 auto' }}>
+                    <img
+                        src={AppLogo}
+                        alt="ap-logo"
+                        style={{
+                            width: 'fit-content',
+                            margin: '16px auto 40px auto'
+                        }} />
+                    <h3 style={{ margin: '16px auto 0 auto' }}>Thông tin tài khoản</h3>
+                    {logInField.map((item: SignInFormProps) => {
+                        const { values, handleChange, errors, touched, handleBlur } = formData
+                        return (
+                            <CustomTextField
+                                label={item.header}
+                                textFieldProps={{
+                                    name: item.name,
+                                    required: true,
+                                    fullWidth: true,
+                                    error: !!errors[item.name] && !!touched[item.name],
+                                    helperText: (errors[item.name] && touched[item.name] && errors[item.name]),
+                                    InputLabelProps: { shrink: true },
+                                    defaultValue: values[item.name],
+                                    onBlur: handleBlur,
+                                    onChange: handleChange,
+                                    variant: 'outlined',
+                                    InputProps: {
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                {item.icon}
+                                            </InputAdornment>
+                                        )
+                                    },
+                                    style: { marginBottom: '16px' },
+                                    type: item.name == 'password' ? 'password' : 'text'
+                                }}
+                            />
+                        )
+                    })}
+                    <Button
+                        onClick={handleFinish}
+                        disabled={!formData.isValid}
+                        variant='contained'
+                        style={{ width: '100%', marginTop: '16px' }}
+                    >
+                        Đăng nhập
+                    </Button>
+                    <Toast />
+                    <p style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+                        Bạn chưa có tài khoản?
+                        <a href='/SignUp' style={{ color: 'orange' }}>
+                            Đăng ký
+                        </a>
+                    </p>
+                </Grid>
             </Grid>
-        </Grid>
     )
 }

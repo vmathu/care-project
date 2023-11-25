@@ -13,7 +13,6 @@ export function deleteLoginData() {
 export const checkLoginToken = () => {
     const login_info = localStorage.getItem(LOGIN_INFO_KEY)
 
-    console.log(login_info)
     if (!login_info) {
         return false
     }
