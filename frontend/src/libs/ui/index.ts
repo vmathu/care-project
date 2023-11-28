@@ -1,2 +1,3 @@
 export { default as colors } from "./color";
-export * from './components'
+export { default as constants } from "./constants";
+export * from "./components";
