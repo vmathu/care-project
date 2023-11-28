@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@mui/styles";
 import { Typography, Rating, Button, styled } from "@mui/material";
+import { Typography, Rating, Button, styled } from "@mui/material";
 import {
   LocationOnRounded,
   LocalPhoneRounded,

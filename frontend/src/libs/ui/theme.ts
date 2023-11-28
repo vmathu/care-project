@@ -138,11 +138,18 @@ theme = createTheme(theme, {
             },
           },
         },
+        {
+          props: { size: "large" },
+          style: {
+            fontWeight: 700,
+          }
+        }
       ],
       styleOverrides: {
         root: {
           boxShadow: "none",
           textTransform: "inherit",
+          fontFamily: '"Be Vietnam Pro", san-serif',
           "&.Mui-disabled": {
             background: colors.black50,
             color: colors.black200,
@@ -173,12 +180,6 @@ theme = createTheme(theme, {
         },
       },
     },
-    MuiRating: {
-      styleOverrides: {
-        root: { color: "#EFD36E" },
-        iconEmpty: { color: "#E6E6E6" },
-      },
-    },
     MuiGrid: {
       styleOverrides: {
         item: { width: "100%" },
@@ -205,11 +206,10 @@ theme = createTheme(theme, {
         },
       },
     },
-    MuiToolbar: {
+    MuiRating: {
       styleOverrides: {
-        root: {
-          minHeight: "0 !important",
-        },
+        root: { color: "#EFD36E" },
+        iconEmpty: { color: "#E6E6E6" },
       },
     },
   },

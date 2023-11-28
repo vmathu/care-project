@@ -1,9 +1,9 @@
 const { UserModel } = require('../models');
 
 class UserRepository  {
-    async createUser({ name, email, password }) {
-        try{
-            const user = new UserModel({ name, email, password });
+    async createUser({ email, password, fullname, phone, role }) {
+        try {
+            const user = new UserModel({ email, password, fullname, phone, role });
             const result = await user.save();
             return result;
         } catch (err) {
@@ -12,7 +12,7 @@ class UserRepository  {
     }
     
     async getAllUsers() {
-        try{
+        try {
             const users = await UserModel.find();
             return users;
         } catch (err) {
@@ -23,7 +23,7 @@ class UserRepository  {
     async findUser({email}) {
         try {
             const existingUser = await UserModel.find({email});
-            return existingUser
+            return existingUser;
         } catch (err) {
             console.log('UserRepository.findUser', err);
         }
