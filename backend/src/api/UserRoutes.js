@@ -7,12 +7,12 @@ module.exports = (app) => {
         try {
             const { email, password, fullname, phone, role } = req.body;
             if (!email || !password || !fullname || !phone || !role) {
-                throw {data: 'fail', message: 'Thiếu thông tin ', status: RespondStatus.BAD_REQUEST };
+                throw { message: 'Thiếu thông tin ', status: RespondStatus.BAD_REQUEST };
             }
             const result  = await service.Register({ email, password, fullname, phone, role });
-            return res.status(result.status).json(result);
+            return res.json(result);
         } catch (err) {
-            res.status(err.status).json({ data: 'fail',  message: err.message, status: err.status });
+            res.json({ data: 'fail',  message: err.message, status: err.status });
         }
     })
 
@@ -23,9 +23,9 @@ module.exports = (app) => {
                 throw { message: 'Thiếu thông tin ', status: RespondStatus.BAD_REQUEST };
             }
             const result = await service.Login({ email, password });
-            return res.status(result.status).json(result);
+            return res.json(result);
         } catch (err) {
-            res.status(err.status).json({ data: 'fail',  message: err.message, status: err.status });
+            res.json({ data: 'fail',  message: err.message, status: err.status });
         }
     })
     

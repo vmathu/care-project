@@ -29,11 +29,8 @@ import Quote from '../Component/quote';
 
 
 export default function SignUp() {
-    const [loading, setLoading] = useState(true)
-    useEffect(() => {
-        if (checkLoginToken()) window.location.href = '/'
-        setLoading(false)
-    })
+    if (checkLoginToken()) window.location.href = '/HomePage'
+    
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -113,29 +110,14 @@ export default function SignUp() {
                 }
             })
             .catch(err => {
-                const errInfo = err.response.data
                 if (err.status == 400 || err.status == 500)
                     window.location.href = `/Errors/${err.status}`
                 else
-                    dispatch(setToast({ ...toast, open: true, message: errInfo.message, title: 'Error', type: 'error' }))
+                    dispatch(setToast({ ...toast, open: true, message: err.message, title: 'Error', type: 'error' }))
             })
     }
 
     return (
-        { loading }
-            ?
-            <CircularProgress
-            size={100}
-                color='primary'
-                sx={
-                    {
-                        position: 'absolute',
-                        top: '45%',
-                        left: '48%',
-                    }
-                }
-            />
-            :
             <Grid container columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} style={{ width: '100vw' }}>
                 {!isMobile &&
                     <Grid item lg={6} md={4} sm={3}>
