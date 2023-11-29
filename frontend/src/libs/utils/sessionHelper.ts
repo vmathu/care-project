@@ -10,7 +10,7 @@ export function deleteLoginData() {
     localStorage.removeItem(LOGIN_INFO_KEY)
 }
 
-export const checkLoginToken = () => {
+export function checkLoginToken () {
     const login_info = localStorage.getItem(LOGIN_INFO_KEY)
 
     if (!login_info) {
@@ -31,4 +31,8 @@ export const checkLoginToken = () => {
         deleteLoginData()
         return false;
     }
+}
+
+export function sessionHelper () {
+    return {...JSON.parse(localStorage.getItem(LOGIN_INFO_KEY) || '{}')}
 }

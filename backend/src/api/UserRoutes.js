@@ -1,5 +1,7 @@
 const UserService = require('../service/UserService');
 const RespondStatus = require('../utils/ResponedData').RespondStatus;
+const UserAuth = require('./middleware/UserAuthorize');
+
 module.exports = (app) => {
     const service = new UserService();
 

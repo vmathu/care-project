@@ -1,4 +1,5 @@
 import axios from "axios";
+import { sessionHelper } from "./sessionHelper";
 
 const REACT_APP_WEB_API = 'http://localhost:3000'
 
@@ -27,7 +28,9 @@ axios.interceptors.response.use(
 const doAxios = (method: string, action: string, data: any) => {
     const headers = {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        "Access-Control-Allow-Origin": "*",
+        'Authorization': `${sessionHelper().token}`
     }
 
     return axios({
