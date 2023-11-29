@@ -1,26 +1,25 @@
-import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableFooter from '@mui/material/TableFooter';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
-import FirstPageIcon from '@mui/icons-material/FirstPage';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import LastPageIcon from '@mui/icons-material/LastPage';
-import Skeleton from '@mui/material/Skeleton';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import RunningWithErrorsIcon from '@mui/icons-material/RunningWithErrors';
+import * as React from "react";
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableFooter from "@mui/material/TableFooter";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import LastPageIcon from "@mui/icons-material/LastPage";
+import Skeleton from "@mui/material/Skeleton";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import RunningWithErrorsIcon from "@mui/icons-material/RunningWithErrors";
 
-import Colors from '../../../libs/ui/color';
-
+import Colors from "../../../libs/ui/color";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -42,15 +41,21 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
     onPageChange(event, 0);
   };
 
-  const handleBackButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleBackButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     onPageChange(event, page - 1);
   };
 
-  const handleNextButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleNextButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     onPageChange(event, page + 1);
   };
 
-  const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleLastPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
 
@@ -58,7 +63,15 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   const pageButtons = [];
 
   for (let i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === 2 || i === totalPages - 1 || i === totalPages || i === page || i === page + 1 || i === page + 2) {
+    if (
+      i === 1 ||
+      i === 2 ||
+      i === totalPages - 1 ||
+      i === totalPages ||
+      i === page ||
+      i === page + 1 ||
+      i === page + 2
+    ) {
       pageButtons.push(
         <IconButton
           key={i}
@@ -66,35 +79,39 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
           disabled={page === i - 1}
         >
           {i}
-        </IconButton>
+        </IconButton>,
       );
     } else if (i === page - 1 || i === page + 3) {
       pageButtons.push(
-        <IconButton
-          key={i}
-          disabled={true}
-        >
+        <IconButton key={i} disabled={true}>
           {"..."}
-        </IconButton>
+        </IconButton>,
       );
     }
   }
 
   return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }} style={{ display: 'flex', justifyContent: 'center' }}>
+    <Box
+      sx={{ flexShrink: 0, ml: 2.5 }}
+      style={{ display: "flex", justifyContent: "center" }}
+    >
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
         aria-label="first page"
       >
-        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
       </IconButton>
       <IconButton
         onClick={handleBackButtonClick}
         disabled={page === 0}
         aria-label="previous page"
       >
-        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowRight />
+        ) : (
+          <KeyboardArrowLeft />
+        )}
       </IconButton>
 
       <IconButton
@@ -102,14 +119,18 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowLeft />
+        ) : (
+          <KeyboardArrowRight />
+        )}
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
       </IconButton>
     </Box>
   );
@@ -124,7 +145,7 @@ interface TableProps {
 }
 
 function modifyStatusText(text: any) {
-  if (typeof text !== 'string') {
+  if (typeof text !== "string") {
     return text;
   }
 
@@ -136,19 +157,19 @@ function modifyStatusText(text: any) {
 
   // return 'Chờ xác nhận'
 
-  if (text === 'completed')
-    return  <TaskAltIcon />
+  if (text === "completed") return <TaskAltIcon />;
 
-  if (text === 'rejected')
-    return <HighlightOffIcon />
+  if (text === "rejected") return <HighlightOffIcon />;
 
-  return <RunningWithErrorsIcon />
+  return <RunningWithErrorsIcon />;
 }
 
 export default function CustomTableMobile({ rows }: TableProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const status = (typeof Object.values(rows[0])[Object.values(rows[0]).length - 1] === 'string');
+  const status =
+    typeof Object.values(rows[0])[Object.values(rows[0]).length - 1] ===
+    "string";
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -169,33 +190,57 @@ export default function CustomTableMobile({ rows }: TableProps) {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ width: '100%' }}>
-      <Table sx={{ width: '100%' }} aria-label="custom-table">
+    <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <Table sx={{ width: "100%" }} aria-label="custom-table">
         <TableBody>
           {(rowsPerPage > 0
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row: any, index) => (
-            <TableRow key={index} sx={{ 
-              display: 'flex', 
-              flexDirection: 'row', 
-              gap: '1rem', 
-              padding: '8px 0px', 
-              width: '100%',
-            }}>
+            <TableRow
+              key={index}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "1rem",
+                padding: "8px 0px",
+                width: "100%",
+              }}
+            >
               <Box>
-              <Skeleton variant="rectangular" width="75px" height="75px" sx={{ bgcolor: Colors.orange100, borderRadius: '4px' }} />
+                <Skeleton
+                  variant="rectangular"
+                  width="75px"
+                  height="75px"
+                  sx={{ bgcolor: Colors.orange100, borderRadius: "4px" }}
+                />
               </Box>
-              
-              <Box sx={{width: 'calc(100vw - 12.375rem)'}}>
-                <Box sx={{ fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left'}}>
+
+              <Box sx={{ width: "calc(100vw - 12.375rem)" }}>
+                <Box
+                  sx={{
+                    fontWeight: "bold",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    textAlign: "left",
+                  }}
+                >
                   {row.fullname}
                 </Box>
                 {Object.entries(row)
-                  .filter(([key]) => key !== 'fullname')
+                  .filter(([key]) => key !== "fullname")
                   .slice(0, -1)
                   .map(([key, value], i) => (
-                    <Box sx={{ color: Colors.black200,  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left'}} >
+                    <Box
+                      sx={{
+                        color: Colors.black200,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        textAlign: "left",
+                      }}
+                    >
                       {`${value}`}
                     </Box>
                   ))}
@@ -203,14 +248,17 @@ export default function CustomTableMobile({ rows }: TableProps) {
               <Box
                 sx={{
                   color: status
-                    ? (row.status === 'rejected'
+                    ? row.status === "rejected"
                       ? Colors.error
-                      : (row.status === 'completed'
+                      : row.status === "completed"
                         ? Colors.success
-                        : Colors.warning))
-                    : Colors.black200,  
-                }}>
-                {modifyStatusText(Object.entries(row).slice(-1)[0][1] as React.ReactNode)}
+                        : Colors.warning
+                    : Colors.black200,
+                }}
+              >
+                {modifyStatusText(
+                  Object.entries(row).slice(-1)[0][1] as React.ReactNode,
+                )}
               </Box>
             </TableRow>
           ))}
@@ -221,7 +269,7 @@ export default function CustomTableMobile({ rows }: TableProps) {
           )}
         </TableBody>
         <TableFooter>
-          <TableRow >
+          <TableRow>
             <TablePagination
               rowsPerPageOptions={[]}
               colSpan={1}
@@ -230,13 +278,13 @@ export default function CustomTableMobile({ rows }: TableProps) {
               page={page}
               SelectProps={{
                 inputProps: {
-                  'aria-label': 'rows per page',
+                  "aria-label": "rows per page",
                 },
                 native: true,
               }}
               onPageChange={handleChangePage}
               ActionsComponent={TablePaginationActions}
-              labelDisplayedRows={() => ''}
+              labelDisplayedRows={() => ""}
             />
           </TableRow>
         </TableFooter>
