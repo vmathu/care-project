@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'libs/redux/store';
 import { setToast } from 'libs/redux/slice/toastSlice';
 
-import { Button, Grid, useMediaQuery, useTheme, InputAdornment, CircularProgress } from '@mui/material'
+import { Button, Grid, useMediaQuery, useTheme, InputAdornment } from '@mui/material'
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import RegisterBackGround from '../../../assets/authen_background.svg'
@@ -23,11 +22,7 @@ import Quote from '../Component/quote';
 
 
 export default function SignIn() {
-    const [loading, setLoading] = useState(true)
-    useEffect(() => {
-        if (checkLoginToken()) window.location.href = '/'
-        setLoading(false)
-    })
+    if (checkLoginToken()) window.location.href = '/HomePage'
 
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
@@ -62,37 +57,29 @@ export default function SignIn() {
 
     const handleFinish = async () => {
         const data = formData.values
-        const result = await doPost('user/login', data)
-        if (result.status == 200) {
-            dispatch(setToast({
-                open: true,
-                message: 'Đăng nhập thành công',
-                type: 'success'
-            }))
-            saveLoginData(result.data.data)
-        } else {
-            dispatch(setToast({
-                open: true,
-                message: result.data.message,
-                type: 'error'
-            }))
-        }
+        doPost('user/login', data)
+            .then((res) => {
+                const result = res.data
+                if (result.status != 200) 
+                    throw { message: result.message, status: result.status }
+                else {
+                    saveLoginData(result.data)
+                    window.location.href = '/HomePage'
+                }
+            })
+            .catch((err) => {
+                if (err.status == 400 || err.status == 500) 
+                    window.location.href = `/Errors/${err.status}`
+                else 
+                    dispatch(setToast({
+                        open: true,
+                        message: err.message,
+                        type: 'error'
+                    }))
+            })
     }
 
     return (
-        loading ?
-            <CircularProgress
-                size={100}
-                color='primary'
-                sx={
-                    {
-                        position: 'absolute',
-                        top: '45%',
-                        left: '48%',
-                    }
-                }
-            />
-            :
             <Grid container columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} style={{ width: '100vw' }}>
                 {!isMobile &&
                     <Grid item lg={6} md={4} sm={3}>

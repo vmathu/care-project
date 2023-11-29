@@ -24,7 +24,7 @@ class UserService {
                 return RespondData('success', 'Tạo tài khoản thành công', RespondStatus.SUCCESS);
             }
         } catch (err) {
-            return RespondData(null, err.message, err.status);
+            return RespondData('fail', err.message, err.status);
         }
     }
 
