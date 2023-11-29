@@ -21,6 +21,9 @@ import CustomTableMobile from './Component/CustomTableMobile'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
+import { SearchAppBar } from 'libs/ui';
+import { Footer } from 'libs/ui';
+
 export default function Profile() {
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
@@ -276,8 +279,8 @@ export default function Profile() {
     return (
         <Grid container columns={{ lg: 12, xs: 4 }} style={{ height: '100vh', width: '100vw' }}>
             {/* Header */}
-            <Grid item lg={12} xs={4} style={{ backgroundColor: Colors.orange200, height: '80px' }}>
-                <b>Header</b>
+            <Grid item lg={12} xs={4}>
+                <SearchAppBar />
             </Grid>
 
             {/* Content */}
@@ -298,8 +301,8 @@ export default function Profile() {
             </Grid>
 
             {/* Footer */}
-            <Grid item lg={12} xs={4} style={{ backgroundColor: Colors.orange200, height: '80px' }}>
-                <b>Footer</b>
+            <Grid item lg={12} xs={4}>
+                <Footer/>
             </Grid>
         </Grid>
     )
