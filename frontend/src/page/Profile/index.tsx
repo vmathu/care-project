@@ -42,7 +42,7 @@ export default function Profile() {
     const defaultBasicInfo = useRef<BasicInfoValues | null>(null);
 
     const [openPopup, setOpenPopup] = useState(false);
-    const [disabledField, setDisabledField] = useState(false);
+    const [disabledField, setDisabledField] = useState(true);
 
     const handleFullnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setBasicInfo(prevState => prevState ? { ...prevState, fullname: event.target.value } : { fullname: event.target.value, email: '', phone: '' });
