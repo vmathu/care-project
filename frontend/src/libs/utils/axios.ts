@@ -41,3 +41,4 @@ const doAxios = (method: string, action: string, data: any) => {
 }
 
 export const doPost = (action: string, data: any) => doAxios('POST', action, data)
+export const doGet = (action: string, data: any) => doAxios('GET', action, data)

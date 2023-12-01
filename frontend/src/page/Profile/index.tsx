@@ -5,69 +5,175 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/system/Box';
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Divider from '@mui/material/Divider';
 import Colors from '../../libs/ui/color';
 import { Button, MenuItem, useMediaQuery, useTheme } from "@mui/material";
 import { CustomSelect, CustomTextField } from "libs/ui";
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'libs/redux/store';
+import { setToast } from 'libs/redux/slice/toastSlice';
 
-
+import { doPost } from 'libs/utils/axios';
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
+import { ChangePasswordValues, BasicInfoValues } from './interface'
+import { checkLoginToken } from 'libs/utils/sessionHelper';
+import { deleteLoginData } from 'libs/utils/sessionHelper';
 
-import { ChangePasswordValues } from './interface'
 import CustomTableDesktop from './Component/CustomTableDesktop'
 import CustomTableMobile from './Component/CustomTableMobile'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-
 import { SearchAppBar } from 'libs/ui';
 import { Footer } from 'libs/ui';
+import Toast from 'libs/ui/components/CustomToast';
+import Dialog from '@mui/material/Dialog';
 
 export default function Profile() {
-    const theme = useTheme()
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+    if (!checkLoginToken()) window.location.href = '/HomePage'
 
+    const theme = useTheme()
+    const dispatch = useDispatch<AppDispatch>()
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
     const [itemMenu, setItemMenu] = useState('Thông tin cơ bản')
 
+    const [basicInfo, setBasicInfo] = useState<BasicInfoValues | null>(null);
+    const defaultBasicInfo = useRef<BasicInfoValues | null>(null);
+
+    const [openPopup, setOpenPopup] = useState(false);
+    const [disabledField, setDisabledField] = useState(false);
+
+    const handleFullnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setBasicInfo(prevState => prevState ? { ...prevState, fullname: event.target.value } : { fullname: event.target.value, email: '', phone: '' });
+    };
+
+    const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setBasicInfo(prevState => prevState ? { ...prevState, phone: event.target.value } : { fullname: '', email: '', phone: event.target.value });
+    };
+
+    const loginInfo = localStorage.getItem('login_info');
+    let id = loginInfo ? JSON.parse(loginInfo).user.id : "";
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await doPost('user/get-basic-info', { "id": id });
+                setBasicInfo(response.data);
+                defaultBasicInfo.current = response.data;
+            } catch (error) {
+                // console.error(error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const handleChangeBasicInfoSubmit = async () => {
+        try {
+            const response = await doPost('user/change-basic-info', {
+                "id": id,
+                "fullname": basicInfo?.fullname || "",
+                "phone": basicInfo?.phone || "",
+            });
+
+            if (response.data.status === 200)
+                defaultBasicInfo.current = basicInfo;
+            else
+                throw { message: response.data.message };
+
+            dispatch(setToast({ open: true, message: response.data.message, type: response.data.data }));
+        } catch (error: any) {
+            dispatch(setToast({ open: true, message: error.message, type: 'error' }));
+        }
+    }
+
     const validationSchema: Yup.ObjectSchema<ChangePasswordValues> = Yup.object({
-        Password: Yup.string().required('Nhập mật khẩu mới').max(255).min(8, 'Mật khẩu phải có ít nhất 8 kí tự'),
-        ConfirmPassword: Yup.string().required('Nhập lại mật khẩu mới để xác nhận').oneOf([Yup.ref('Password')], 'Mật khẩu không trùng khớp').max(255),
+        oldPassword: Yup.string().max(255).required('Nhập mật khẩu cũ').max(255).min(8, 'Mật khẩu phải có ít nhất 8 kí tự'),
+        newPassword: Yup.string().required('Nhập mật khẩu mới').max(255).min(8, 'Mật khẩu phải có ít nhất 8 kí tự'),
+        confirmPassword: Yup.string().required('Nhập lại mật khẩu mới để xác nhận').oneOf([Yup.ref('newPassword')], 'Mật khẩu không trùng khớp').max(255),
     })
 
-    const formData = useFormik({
+    const formPassword = useFormik({
         initialValues: {
-            Password: "",
-            ConfirmPassword: "",
+            oldPassword: "",
+            newPassword: "",
+            confirmPassword: "",
         },
         validationSchema,
         validateOnChange: true,
-        validateOnMount: true,
+        validateOnMount: false,
         enableReinitialize: true,
-        initialErrors: { Password: 'Password is required' },
         onSubmit: () => {
+
         }
     })
 
+    const handleChangePasswordSubmit = async () => {
+        try {
+            const response = await doPost('user/change-password', {
+                "id": id,
+                "oldPassword": formPassword.values.oldPassword,
+                "newPassword": formPassword.values.newPassword
+            });
+
+            if (response.data.status === 200)
+                dispatch(setToast({ open: true, message: response.data.message, type: response.data.data }));
+            else
+                throw { message: response.data.message };
+        } catch (error: any) {
+            dispatch(setToast({ open: true, message: error.message, type: 'error' }));
+        }
+    }
+
+    const handleDeleteAccount = async () => {
+        try {
+            const response = await doPost('user/delete-account', {
+                "id": id
+            });
+
+            if (response.data.status === 200) {
+                deleteLoginData();
+                window.location.href = '/HomePage';
+            }
+            else
+                throw { message: response.data.message };
+        } catch (error: any) {
+            dispatch(setToast({ open: true, message: error.message, type: 'error' }));
+        }
+    }
 
     const handleBasicInfo = () => {
         return (
             <Grid container rowSpacing={4} columns={{ xs: 4, lg: 9 }}>
                 <Grid item xs={4} lg={9}>
                     <Box style={{ background: 'white', borderRadius: '16px', padding: '16px 16px' }}>
-                        <h3 style={{ textAlign: 'left', color: 'black' }}>
-                            Thông tin cơ bản
-                        </h3>
+                        <Box display="flex" alignItems="center">
+                            <h3 style={{ textAlign: 'left', color: 'black', marginRight: '8px' }}>
+                                Thông tin cơ bản
+                            </h3>
+                            <div
+                                style={{ color: Colors.black200, fontWeight: 500, cursor: 'pointer' }}
+                                onClick={() => {
+                                    setDisabledField(false);
+                                }}>
+                                Edit
+                            </div>
+                        </Box>
 
                         <Grid container columns={{ xs: 4, lg: 9 }} direction={isMobile ? 'column-reverse' : 'row'}>
                             <Grid item xs={4} lg={7}>
-                                <CustomTextField
-                                    label="Họ tên"
-                                    textFieldProps={{ required: true, fullWidth: true }} />
+                                <Box marginBottom={2}>
+                                    <CustomTextField
+                                        label="Họ tên"
+                                        textFieldProps={{ required: true, fullWidth: true, value: basicInfo?.fullname || '', onChange: handleFullnameChange, disabled: disabledField }} />
+                                </Box>
 
-                                <CustomTextField
-                                    label="Email"
-                                    textFieldProps={{ required: true, fullWidth: true }} />
+                                <Box marginBottom={2}>
+                                    <CustomTextField
+                                        label="Email"
+                                        textFieldProps={{ fullWidth: true, value: basicInfo?.email || '', disabled: true }} />
+                                </Box>
                             </Grid>
 
                             <Grid item xs={4} lg={2}>
@@ -75,24 +181,27 @@ export default function Profile() {
                                     <Skeleton variant="circular" width={160} height={160} />
                                 </Grid>
                             </Grid>
-                        </Grid>
 
-                        <Grid container columns={{ xs: 4, lg: 9 }}>
-                            <Grid item xs={4} lg={9}>
-                                <CustomTextField
-                                    label="Số điện thoại"
-                                    textFieldProps={{ required: true, fullWidth: true }} />
+                            <Grid container columns={{ xs: 4, lg: 9 }}>
+                                <Grid item xs={4} lg={9}>
+                                    <Box marginBottom={2}>
+                                        <CustomTextField
+                                            label="Số điện thoại"
+                                            textFieldProps={{ required: true, fullWidth: true, value: basicInfo?.phone || '', onChange: handlePhoneChange, disabled: disabledField }} />
+                                    </Box>
+                                </Grid>
                             </Grid>
 
                             <Grid item xs={4} lg={9} style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-around', gap: '1rem' }}>
                                 <CustomSelect
                                     label="Thành phố"
-                                    rootStyle={{width: isMobile ? '100%': '50%'}}
+                                    rootStyle={{ width: isMobile ? '100%' : '50%' }}
                                     selectProps={{
                                         required: true,
                                         defaultValue: "",
                                         displayEmpty: true,
-                                        fullWidth: true
+                                        fullWidth: true,
+                                        disabled: disabledField
                                     }}
                                 >
                                     <MenuItem value="" disabled style={{ display: "none" }}>
@@ -104,12 +213,13 @@ export default function Profile() {
 
                                 <CustomSelect
                                     label="Quận/Huyện"
-                                    rootStyle={{width: isMobile ? '100%': '50%'}}
+                                    rootStyle={{ width: isMobile ? '100%' : '50%' }}
                                     selectProps={{
                                         required: true,
                                         defaultValue: "",
                                         displayEmpty: true,
-                                        fullWidth: true
+                                        fullWidth: true,
+                                        disabled: disabledField
                                     }}
                                 >
                                     <MenuItem value="" disabled style={{ display: "none" }}>
@@ -121,14 +231,25 @@ export default function Profile() {
 
                             </Grid>
                         </Grid>
-                        <Grid container justifyContent="flex-start">
-                            <Button variant="text" size="large">
-                                Hủy
-                            </Button>
-                            <Button variant="contained" size="large">
-                                Lưu thay đổi
-                            </Button>
-                        </Grid>
+                        {!disabledField && (
+                            <Grid container justifyContent="flex-start">
+                                <Box marginTop={2}>
+                                    <Button
+                                        variant="text"
+                                        size="large"
+                                        onClick={() => {
+                                            setBasicInfo(defaultBasicInfo.current);
+                                            setDisabledField(true);
+                                        }}
+                                    >
+                                        Hủy
+                                    </Button>
+                                    <Button variant="contained" size="large" onClick={handleChangeBasicInfoSubmit}>
+                                        Lưu thay đổi
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        )}
 
                     </Box>
                 </Grid>
@@ -136,31 +257,98 @@ export default function Profile() {
                 <Grid item lg={12} xs={4}>
                     <Box style={{ background: 'white', borderRadius: '16px', padding: '16px 16px' }}>
                         <h3 style={{ textAlign: 'left', color: 'black' }}>Đổi mật khẩu</h3>
-                        <CustomTextField
-                            label="Nhập mật khẩu cũ"
-                            textFieldProps={{ required: true, fullWidth: true, type: 'password' }} />
-                        <CustomTextField
-                            label="Nhập mật khẩu mới"
-                            textFieldProps={{ name: 'newPassword', required: true, fullWidth: true, type: 'password' }} />
-                        <CustomTextField
-                            label="Nhập lại mật khẩu mới"
-                            textFieldProps={{ name: 'confirmPassword', required: true, fullWidth: true, type: 'password' }} />
+                        <Box marginBottom={2}>
+                            <CustomTextField
+                                label="Nhập mật khẩu cũ"
+                                textFieldProps={{
+                                    required: true,
+                                    fullWidth: true,
+                                    type: 'password',
+                                    name: 'oldPassword',
+                                    value: formPassword.values.oldPassword,
+                                    onChange: formPassword.handleChange,
+                                    onBlur: formPassword.handleBlur,
+                                    error: (formPassword.touched.oldPassword && !!formPassword.errors.oldPassword),
+                                    helperText: (formPassword.touched.oldPassword && formPassword.errors.oldPassword)
+                                }}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <CustomTextField
+                                label="Nhập mật khẩu mới"
+                                textFieldProps={{
+                                    name: 'newPassword',
+                                    required: true,
+                                    fullWidth: true,
+                                    type: 'password',
+                                    value: formPassword.values.newPassword,
+                                    onChange: formPassword.handleChange,
+                                    onBlur: formPassword.handleBlur,
+                                    error: (formPassword.touched.newPassword && !!formPassword.errors.newPassword),
+                                    helperText: (formPassword.touched.newPassword && formPassword.errors.newPassword)
+                                }}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <CustomTextField
+                                label="Nhập lại mật khẩu mới"
+                                textFieldProps={{
+                                    name: 'confirmPassword',
+                                    required: true,
+                                    fullWidth: true,
+                                    type: 'password',
+                                    value: formPassword.values.confirmPassword,
+                                    onChange: formPassword.handleChange,
+                                    onBlur: formPassword.handleBlur,
+                                    error: (formPassword.touched.confirmPassword && !!formPassword.errors.confirmPassword),
+                                    helperText: (formPassword.touched.confirmPassword && formPassword.errors.confirmPassword)
+                                }}
+                            />
+                        </Box>
                         <Grid container justifyContent="flex-start">
-                            <Button variant="text" size="large">
+                            <Button
+                                variant="text"
+                                size="large"
+                                onClick={() => {
+                                    formPassword.setFieldValue('oldPassword', '');
+                                    formPassword.setFieldValue('newPassword', '');
+                                    formPassword.setFieldValue('confirmPassword', '');
+                                    formPassword.setFieldTouched('oldPassword', false);
+                                    formPassword.setFieldTouched('newPassword', false);
+                                    formPassword.setFieldTouched('confirmPassword', false);
+                                }}
+                            >
                                 Hủy
                             </Button>
-                            <Button variant="contained" size="large">
+                            <Button variant="contained" size="large" disabled={!formPassword.isValid} onClick={handleChangePasswordSubmit}>
                                 Lưu thay đổi
                             </Button>
                         </Grid>
                     </Box>
                 </Grid>
 
+                <Dialog open={openPopup} onClose={() => setOpenPopup(false)}>
+                    <Box style={{ padding: '16px 16px' }}>
+                        <Box display="flex" justifyContent="center" alignItems="center">
+                            <HighlightOffIcon sx={{ width: '160px', height: '160px', color: Colors.orange500 }} />
+                        </Box>
+
+                        <h3 style={{ color: 'black' }}>Bạn có chắc chắn xóa tài khoản?</h3>
+                        <Box display="flex" justifyContent="center" gap={2}>
+                            <Button onClick={() => { setOpenPopup(false) }}>
+                                Hủy
+                            </Button>
+                            <Button variant="contained" size="large" onClick={handleDeleteAccount}>
+                                Xác nhận xóa
+                            </Button>
+                        </Box>
+                    </Box>
+                </Dialog>
                 <Grid item lg={12} xs={4}>
                     <Box style={{ background: 'white', borderRadius: '16px', padding: '16px 16px' }}>
                         <h3 style={{ textAlign: 'left', color: 'black' }}>Xoá tài khoản</h3>
                         <p style={{ textAlign: 'justify', color: 'black' }}>Một khi tài khoản bị xóa, tất cả dữ liệu của bạn sẽ bị mất và không thể khôi phục tài khoản. Hãy lưu ý kỹ trước khi xác nhận xóa tài khoản.</p>
-                        <Button variant="text" size="large" style={{ display: 'flex' }}>Xoá tài khoản</Button>
+                        <Button variant="text" size="large" onClick={() => { setOpenPopup(true) }} style={{ display: 'flex' }}>Xoá tài khoản</Button>
                     </Box>
                 </Grid>
             </Grid>
@@ -195,9 +383,9 @@ export default function Profile() {
                 <Grid item xs={4} lg={9}>
                     <Box style={{ background: 'white', borderRadius: '16px', padding: '16px 16px' }}>
                         <h3 style={{ textAlign: 'left', color: 'black' }}>Đơn hàng của tôi</h3>
-                        {!isMobile 
-                        ? <CustomTableDesktop headers={headers} rows={modifiedRows}/>
-                        : <CustomTableMobile rows={modifiedRows}/>
+                        {!isMobile
+                            ? <CustomTableDesktop headers={headers} rows={modifiedRows} />
+                            : <CustomTableMobile rows={modifiedRows} />
                         }
                     </Box>
                 </Grid>
@@ -217,15 +405,15 @@ export default function Profile() {
             })
         }
 
-        
-        const modifiedRows = !isMobile 
+
+        const modifiedRows = !isMobile
             ? rows.map(row => ({
                 ...row,
                 icon: <HighlightOffIcon />,
             }))
             : rows.map(row => ({
                 ...row,
-                icon: <FavoriteIcon sx={{color: Colors.orange500}} />,
+                icon: <FavoriteIcon sx={{ color: Colors.orange500 }} />,
             }));
 
         return (
@@ -233,9 +421,9 @@ export default function Profile() {
                 <Grid item xs={4} lg={9}>
                     <Box style={{ background: 'white', borderRadius: '16px', padding: '16px 16px' }}>
                         <h3 style={{ textAlign: 'left', color: 'black' }}>Quán yêu thích</h3>
-                        {!isMobile 
-                        ? <CustomTableDesktop headers={headers} rows={modifiedRows}/>
-                        : <CustomTableMobile rows={modifiedRows}/>
+                        {!isMobile
+                            ? <CustomTableDesktop headers={headers} rows={modifiedRows} />
+                            : <CustomTableMobile rows={modifiedRows} />
                         }
                     </Box>
                 </Grid>
@@ -267,7 +455,12 @@ export default function Profile() {
                         <Divider />
                         <ListItem>
                             <ListItemButton>
-                                <ListItemText primary="Đăng xuất" style={{ color: Colors.error }} />
+                                <ListItemText primary="Đăng xuất"
+                                    style={{ color: Colors.error }}
+                                    onClick={() => {
+                                        deleteLoginData();
+                                        window.location.href = '/HomePage'
+                                    }} />
                             </ListItemButton>
                         </ListItem>
                     </List>
@@ -277,33 +470,36 @@ export default function Profile() {
     }
 
     return (
-        <Grid container columns={{ lg: 12, xs: 4 }} style={{ height: '100vh', width: '100vw' }}>
-            {/* Header */}
-            <Grid item lg={12} xs={4}>
-                <SearchAppBar />
-            </Grid>
+        <>
+            <Grid container columns={{ lg: 12, xs: 4 }} style={{ height: '100vh', width: '100vw' }}>
+                {/* Header */}
+                <Grid item lg={12} xs={4}>
+                    <SearchAppBar />
+                </Grid>
 
-            {/* Content */}
-            <Grid item lg={12} xs={4} style={{ padding: isMobile ? '16px 16px' : '40px 80px', backgroundColor: '#D9D9D9' }}>
-                <Grid container columnSpacing={4} columns={{ lg: 12, xs: 4 }}>
-                    {!isMobile && (
-                        <Grid item lg={3}>
-                            {handleMenu()}
+                {/* Content */}
+                <Grid item lg={12} xs={4} style={{ padding: isMobile ? '16px 16px' : '40px 80px', backgroundColor: '#D9D9D9' }}>
+                    <Grid container columnSpacing={4} columns={{ lg: 12, xs: 4 }}>
+                        {!isMobile && (
+                            <Grid item lg={3}>
+                                {handleMenu()}
+                            </Grid>
+                        )}
+
+                        <Grid item xs={4} lg={9}>
+                            {itemMenu === 'Thông tin cơ bản' && handleBasicInfo()}
+                            {itemMenu === 'Đơn hàng của tôi' && handleMyOrder()}
+                            {itemMenu === 'Quán yêu thích' && handleFavorite()}
                         </Grid>
-                    )}
-
-                    <Grid item xs={4} lg={9}>
-                        {itemMenu === 'Thông tin cơ bản' && handleBasicInfo()}
-                        {itemMenu === 'Đơn hàng của tôi' && handleMyOrder()}
-                        {itemMenu === 'Quán yêu thích' && handleFavorite()}
                     </Grid>
                 </Grid>
-            </Grid>
 
-            {/* Footer */}
-            <Grid item lg={12} xs={4}>
-                <Footer/>
+                {/* Footer */}
+                <Grid item lg={12} xs={4}>
+                    <Footer />
+                </Grid>
             </Grid>
-        </Grid>
+            <Toast />
+        </>
     )
 }
