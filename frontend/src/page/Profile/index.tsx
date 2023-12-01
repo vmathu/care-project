@@ -244,7 +244,11 @@ export default function Profile() {
                                     >
                                         Hủy
                                     </Button>
-                                    <Button variant="contained" size="large" onClick={handleChangeBasicInfoSubmit}>
+                                    <Button variant="contained" size="large" 
+                                    onClick={() => {
+                                      handleChangeBasicInfoSubmit()
+                                      setDisabledField(true)
+                                    }}>
                                         Lưu thay đổi
                                     </Button>
                                 </Box>
@@ -327,7 +331,7 @@ export default function Profile() {
                     </Box>
                 </Grid>
 
-                <Dialog open={openPopup} onClose={() => setOpenPopup(false)}>
+                <Dialog open={openPopup} onClose={() => setOpenPopup(false)} PaperProps={{style: { borderRadius: 16 }}}>
                     <Box style={{ padding: '16px 16px' }}>
                         <Box display="flex" justifyContent="center" alignItems="center">
                             <HighlightOffIcon sx={{ width: '160px', height: '160px', color: Colors.orange500 }} />
