@@ -97,6 +97,7 @@ theme = createTheme(theme, {
             "&:hover": {
               background: colors.orange600,
               boxShadow: "none",
+              color: colors.white,
             },
           },
         },
@@ -142,8 +143,8 @@ theme = createTheme(theme, {
           props: { size: "large" },
           style: {
             fontWeight: 700,
-          }
-        }
+          },
+        },
       ],
       styleOverrides: {
         root: {

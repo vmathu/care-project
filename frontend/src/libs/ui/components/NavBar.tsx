@@ -4,6 +4,7 @@ import LogoText from "../../../assets/app-logo-text.svg";
 import Avatar from "./Avatar";
 import colors from "../color";
 import { CustomSearch } from ".";
+import { Link } from "react-router-dom";
 
 export const SearchAppBar = ({}) => {
   const theme = useTheme();
@@ -17,15 +18,17 @@ export const SearchAppBar = ({}) => {
     >
       <Toolbar style={{ padding: isMobile ? "16px" : "20px 80px" }}>
         {/* <img src={LogoText} alt="logo" style={{ width: '', height: isMobile ? '20px' : '40px' }} /> */}
-        <img
-          src={LogoText}
-          alt="logo"
-          style={{
-            width: isMobile ? "100px" : "",
-            height: isMobile ? "20px" : "40px",
-            padding: isMobile ? "0 16px" : "",
-          }}
-        />
+        <Link to="/HomePage">
+          <img
+            src={LogoText}
+            alt="logo"
+            style={{
+              width: isMobile ? "100px" : "",
+              height: isMobile ? "20px" : "40px",
+              padding: isMobile ? "0 16px" : "",
+            }}
+          />
+        </Link>
         <Box flexGrow={1} />
         <CustomSearch />
         <Box mr={2} />
