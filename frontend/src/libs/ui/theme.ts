@@ -99,6 +99,7 @@ theme = createTheme(theme, {
             "&:hover": {
               background: colors.orange600,
               boxShadow: "none",
+              color: colors.white,
             },
           },
         },
