@@ -1,2 +1,3 @@
 import shopImg from "./shop1.jpg";
-export { shopImg };
+import banner from "./banner.svg";
+export { shopImg, banner };
