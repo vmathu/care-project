@@ -118,7 +118,7 @@ export default function HomePage() {
 
       <SpacedComponent>
         <ShopSection title="Đã đến gần đây">
-          <ShopScroll container spacing={{ xs: 2, sm: 4 }}>
+          <ShopScroll>
             {shops.slice(0, 8).map((shop, id) => (
               <Item key={id}>
                 <CustomCard {...shop} />
