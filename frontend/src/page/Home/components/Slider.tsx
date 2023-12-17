@@ -15,19 +15,30 @@ const images = [
 ];
 
 const styles = {
-    slider: (isMobile: boolean) => ({
-        display: 'flex',
+    container: (isMobile: boolean) => ({
         overflow: 'hidden',
-        width: isMobile ? '100%' : '100vw',
-        position: 'relative',
+        height: isMobile ? '50vh' : '100vh', // adjust as needed
     }),
-    image: (currentImage: number, index: number) => ({
-        display: currentImage === index ? 'block' : 'none',
+    slider: (currentImage: number) => ({
+        display: 'flex',
         width: '100%',
-        height: 'auto',
-        transition: 'opacity 1s ease-in-out',
-        transform: `translateX(${(index - currentImage) * 100}%)`,
+        height: 'auto !important',
+        transform: `translateX(${-currentImage * 100}%`,
+        transition: 'transform 0.5s linear',
+        isMobile: {
+            width: `${images.length * 100}%`,
+            transform: `translateX(${-currentImage * 100}%`,
+        },
     }),
+    image: {
+        width: '100%',
+        isMobile: {
+            width: `${100 / images.length}%`,
+        },
+        height: '100%',
+        objectFit: 'contain' as 'contain', // adjust to maintain aspect ratio
+        borderRadius: '40px',
+    },
     dotsContainer: (isMobile: boolean): React.CSSProperties => ({
         position: 'absolute',
         bottom: isMobile ? '12px' : '40px',
@@ -45,7 +56,8 @@ const styles = {
         borderRadius: '50%',
         backgroundColor: currentImage === index ? colors.black400 : '#D9D9D9',
         margin: '5px',
-    })
+        cursor: 'pointer',
+    }),
 };
 
 export const Slider = () => {
@@ -56,21 +68,26 @@ export const Slider = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentImage((currentImage + 1) % images.length);
+            setCurrentImage((currentImage) % images.length);
         }, 3000);
         return () => clearInterval(interval);
     }, [currentImage]);
 
     return (
-        <Box sx={styles.slider(isMobile)}>
-            {images.map((image, index) => (
-                <img
-                    key={index}
-                    src={image}
-                    alt={`Slide ${index}`}
-                    style={styles.image(currentImage, index)}
-                />
-            ))}
+        <div style={styles.container(isMobile)}>
+            <div
+                className="slider"
+                style={styles.slider(currentImage)}
+            >
+                {images.map((image, index) => (
+                    <img
+                        key={index}
+                        src={image}
+                        alt={`Slide ${index}`}
+                        style={styles.image}
+                    />
+                ))}
+            </div>
             <div style={styles.dotsContainer(isMobile)}>
                 {images.map((_, index) => (
                     <div
@@ -80,6 +97,7 @@ export const Slider = () => {
                     />
                 ))}
             </div>
-        </Box>
+        </div>
+
     );
 };

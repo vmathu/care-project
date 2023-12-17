@@ -98,13 +98,10 @@ export default function HomePage() {
   const tabItems = ['Top đánh giá', 'Gần bạn', 'Yêu thích'];
   return (
     <div>
-      <SpacedComponent>
-        <SearchAppBar />
-      </SpacedComponent>
+      <SearchAppBar />
       <SpacedComponent>
         <Slider />
       </SpacedComponent>
-
       <ShopSection title="Gợi ý hôm nay">
         <Tab tabItems={tabItems} />
         <ShopGrid container spacing={{ xs: 2, sm: 4 }}>
