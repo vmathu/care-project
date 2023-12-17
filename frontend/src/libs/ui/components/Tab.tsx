@@ -57,8 +57,6 @@ export const Tab: React.FC<TabProps> = ({ tabItems }) => {
                 );
             })}
             <div>
-                {/* Render content based on activeTab */}
-                {/* Add your content here */}
             </div>
         </div>
     );
