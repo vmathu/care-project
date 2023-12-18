@@ -17,10 +17,9 @@ const ShopGrid = styled(Grid)(({ theme }) => ({
 const ShopScroll = styled(Grid)(({ theme }) => ({
   margin: theme.spacing(-4),
   display: 'flex',
-  flexDirection: 'row', // change here
-  flexWrap: 'nowrap', // change here
+  flexDirection: 'row',
+  flexWrap: 'nowrap',
   overflowX: 'auto',
-  margin: "0 80px !important",
   width: "-webkit-fill-available !important",
   boxSizing: 'border-box',
   '&::-webkit-scrollbar': {
