@@ -34,17 +34,6 @@ const ShopScroll = styled(Grid)(({ theme }) => ({
   },
 }));
 
-// const Item = styled(Grid)(({ theme }) => ({
-//   flex: '0 0 auto',
-//   width: '392.25px !important',
-//   margin: '32px 0 0 32px',
-//   [theme.breakpoints.down("sm")]: {
-//     width: '100%',
-//     flex: '1 1 auto',
-//     padding: '32px 0 0 0',
-//   },
-// }));
-
 type Props = {
   img: string[];
   fullname: string;
