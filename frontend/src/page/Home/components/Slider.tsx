@@ -47,7 +47,7 @@ const styles = {
         width: dotSize,
         height: dotSize,
         borderRadius: '50%',
-        backgroundColor: currentImage === index ? colors.black400 : '#D9D9D9',
+        backgroundColor: currentImage === index ? colors.orange500 : '#D9D9D9',
         margin: '5px',
         cursor: 'pointer',
     }),
