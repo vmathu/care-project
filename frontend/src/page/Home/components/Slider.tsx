@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
-import { Box } from '@mui/material';
 import banner1 from '../assets/banner1.png';
 import banner2 from '../assets/banner2.png';
 import banner3 from '../assets/banner3.png';
@@ -17,10 +16,12 @@ const images = [
 const styles = {
     container: (isMobile: boolean) => ({
         overflow: 'hidden',
-        height: isMobile ? '50vh' : '100vh'
+        height: isMobile ? '20%' : '100%'
     }),
-    slider: (currentImage: number, isMobile: boolean) => ({
-        'white-space': 'nowrap' as 'nowrap',
+    slider: (currentImage: number) => ({
+        width: '100%',
+        height: '100%',
+        whiteSpace: 'nowrap' as 'nowrap',
         transform: `translate3d(${-currentImage * 100}%, 0, 0)`,
         transition: 'ease 1000ms',
     }),
@@ -29,13 +30,11 @@ const styles = {
         width: '100%',
         height: 'auto',
         borderRadius: '40px',
-        //position: 'absolute' as 'absolute',
+        objectFit: 'contain' as 'contain',
     }),
-
-
-    dotsContainer: (isMobile: boolean): React.CSSProperties => ({
+    dotsContainer: (): React.CSSProperties => ({
         position: 'absolute',
-        bottom: isMobile ? '12px' : '40px',
+        bottom: '20px',
         left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex',
@@ -63,16 +62,13 @@ export const Slider = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentImage((prevCurrentImage) => (prevCurrentImage + 1) % images.length);
-        }, 99000);
+        }, 3000);
         return () => clearInterval(interval);
     }, []);
 
     return (
         <div style={styles.container(isMobile)}>
-            <div
-                className="slider"
-                style={styles.slider(currentImage, isMobile)}
-            >
+            <div style={styles.slider(currentImage)}>
                 {images.map((image, index) => (
                     <img
                         key={index}
@@ -82,8 +78,8 @@ export const Slider = () => {
                     />
                 ))}
             </div>
-            <div style={styles.dotsContainer(isMobile)}>
-                {images.map((_, index) => (
+            <div style={styles.dotsContainer()}>
+                {!isMobile && images.map((_, index) => (
                     <div
                         key={index}
                         style={styles.dot(currentImage, index, dotSize)}

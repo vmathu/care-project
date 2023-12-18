@@ -102,17 +102,18 @@ export default function HomePage() {
       <SpacedComponent>
         <Slider />
       </SpacedComponent>
-      <ShopSection title="Gợi ý hôm nay">
-        <Tab tabItems={tabItems} />
-        <ShopGrid container spacing={{ xs: 2, sm: 4 }}>
-          {shops.slice(0, 8).map((shop, id) => (
-            <Grid item xs={12} sm={3} key={id}>
-              <CustomCard {...shop} />
-            </Grid>
-          ))}
-        </ShopGrid>
-      </ShopSection>
-
+      <SpacedComponent>
+        <ShopSection title="Gợi ý hôm nay">
+          <Tab tabItems={tabItems} />
+          <ShopGrid container spacing={{ xs: 2, sm: 4 }}>
+            {shops.slice(0, 8).map((shop, id) => (
+              <Grid item xs={12} sm={3} key={id}>
+                <CustomCard {...shop} />
+              </Grid>
+            ))}
+          </ShopGrid>
+        </ShopSection>
+      </SpacedComponent>
       <SpacedComponent>
         <ShopSection title="Đã đến gần đây">
           <ShopScroll>
