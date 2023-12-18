@@ -14,10 +14,12 @@ const ShopGrid = styled(Grid)(({ theme }) => ({
   },
 }));
 
-const ShopScroll = styled('div')(({ theme }) => ({
-  display: 'inline-flex',
+const ShopScroll = styled(Grid)(({ theme }) => ({
+  margin: theme.spacing(-4),
+  display: 'flex',
+  flexDirection: 'row', // change here
+  flexWrap: 'nowrap', // change here
   overflowX: 'auto',
-  whiteSpace: 'nowrap',
   margin: "0 80px !important",
   width: "-webkit-fill-available !important",
   boxSizing: 'border-box',
@@ -33,16 +35,16 @@ const ShopScroll = styled('div')(({ theme }) => ({
   },
 }));
 
-const Item = styled(Grid)(({ theme }) => ({
-  flex: '0 0 auto',
-  width: '392.25px !important',
-  margin: '32px 0 0 32px',
-  [theme.breakpoints.down("sm")]: {
-    width: '100%',
-    flex: '1 1 auto',
-    padding: '32px 0 0 0',
-  },
-}));
+// const Item = styled(Grid)(({ theme }) => ({
+//   flex: '0 0 auto',
+//   width: '392.25px !important',
+//   margin: '32px 0 0 32px',
+//   [theme.breakpoints.down("sm")]: {
+//     width: '100%',
+//     flex: '1 1 auto',
+//     padding: '32px 0 0 0',
+//   },
+// }));
 
 type Props = {
   img: string[];
@@ -116,11 +118,11 @@ export default function HomePage() {
       </SpacedComponent>
       <SpacedComponent>
         <ShopSection title="Đã đến gần đây">
-          <ShopScroll>
+          <ShopScroll item container direction="row" wrap="nowrap" spacing={4}>
             {shops.slice(0, 8).map((shop, id) => (
-              <Item key={id}>
+              <Grid item xs={12} sm={3} key={id}>
                 <CustomCard {...shop} />
-              </Item>
+              </Grid>
             ))}
           </ShopScroll>
         </ShopSection>
