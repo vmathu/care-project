@@ -15,7 +15,7 @@ const ShopGrid = styled(Grid)(({ theme }) => ({
 }));
 
 const ShopScroll = styled(Grid)(({ theme }) => ({
-  margin: theme.spacing(-4),
+  margin: "0 80px !important",
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'nowrap',
@@ -33,6 +33,7 @@ const ShopScroll = styled(Grid)(({ theme }) => ({
     boxSizing: 'border-box',
   },
 }));
+
 
 type Props = {
   img: string[];
@@ -106,7 +107,7 @@ export default function HomePage() {
       </SpacedComponent>
       <SpacedComponent>
         <ShopSection title="Đã đến gần đây">
-          <ShopScroll item container direction="row" wrap="nowrap" spacing={4}>
+          <ShopScroll item container direction="row" spacing={4}>
             {shops.slice(0, 8).map((shop, id) => (
               <Grid item xs={12} sm={3} key={id}>
                 <CustomCard {...shop} />
