@@ -17,28 +17,22 @@ const images = [
 const styles = {
     container: (isMobile: boolean) => ({
         overflow: 'hidden',
-        height: isMobile ? '50vh' : '100vh', // adjust as needed
+        height: isMobile ? '50vh' : '100vh'
     }),
-    slider: (currentImage: number) => ({
-        display: 'flex',
-        width: '100%',
-        height: 'auto !important',
-        transform: `translateX(${-currentImage * 100}%`,
-        transition: 'transform 0.5s linear',
-        isMobile: {
-            width: `${images.length * 100}%`,
-            transform: `translateX(${-currentImage * 100}%`,
-        },
+    slider: (currentImage: number, isMobile: boolean) => ({
+        'white-space': 'nowrap' as 'nowrap',
+        transform: `translate3d(${-currentImage * 100}%, 0, 0)`,
+        transition: 'ease 1000ms',
     }),
-    image: {
+    image: () => ({
+        display: 'inline-block',
         width: '100%',
-        isMobile: {
-            width: `${100 / images.length}%`,
-        },
-        height: '100%',
-        objectFit: 'contain' as 'contain', // adjust to maintain aspect ratio
+        height: 'auto',
         borderRadius: '40px',
-    },
+        //position: 'absolute' as 'absolute',
+    }),
+
+
     dotsContainer: (isMobile: boolean): React.CSSProperties => ({
         position: 'absolute',
         bottom: isMobile ? '12px' : '40px',
@@ -68,23 +62,23 @@ export const Slider = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentImage((currentImage) % images.length);
-        }, 3000);
+            setCurrentImage((prevCurrentImage) => (prevCurrentImage + 1) % images.length);
+        }, 99000);
         return () => clearInterval(interval);
-    }, [currentImage]);
+    }, []);
 
     return (
         <div style={styles.container(isMobile)}>
             <div
                 className="slider"
-                style={styles.slider(currentImage)}
+                style={styles.slider(currentImage, isMobile)}
             >
                 {images.map((image, index) => (
                     <img
                         key={index}
                         src={image}
                         alt={`Slide ${index}`}
-                        style={styles.image}
+                        style={styles.image()}
                     />
                 ))}
             </div>
@@ -98,6 +92,5 @@ export const Slider = () => {
                 ))}
             </div>
         </div>
-
     );
 };
