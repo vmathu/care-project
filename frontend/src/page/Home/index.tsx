@@ -34,7 +34,6 @@ const ShopScroll = styled(Grid)(({ theme }) => ({
   },
 }));
 
-
 type Props = {
   img: string[];
   fullname: string;
@@ -67,8 +66,8 @@ type ShopSectionProps = {
 };
 
 const ShopSection = ({ title, children }: ShopSectionProps) => (
-  <section style={{ padding: '0 80px' }}>
-    <Box sx={{ marginBottom: 5 }}>
+  <section style={{ padding: '0 16px' }}>
+    <Box sx={{ marginBottom: 2 }}>
       <Typography variant="h4" align="center">{title}</Typography>
     </Box>
     {children}
@@ -107,7 +106,7 @@ export default function HomePage() {
       </SpacedComponent>
       <SpacedComponent>
         <ShopSection title="Đã đến gần đây">
-          <ShopScroll item container direction="row" spacing={4}>
+          <ShopScroll item container direction="row" spacing={{ xs: 2, sm: 4 }}>
             {shops.slice(0, 8).map((shop, id) => (
               <Grid item xs={12} sm={3} key={id}>
                 <CustomCard {...shop} />

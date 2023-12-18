@@ -17,7 +17,7 @@ const styles = (isActive: boolean, isMobile: boolean) => ({
         height: '32px',
         padding: '8px 16px',
         backgroundColor: 'transparent',
-        color: isActive ? colors.black500 : colors.black100,
+        color: isActive ? colors.orange500 : colors.black100,
         border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',
@@ -31,7 +31,7 @@ const styles = (isActive: boolean, isMobile: boolean) => ({
         transform: 'translateX(-50%)',
         width: '100%',
         height: '2px',
-        backgroundColor: isActive ? colors.black500 : 'transparent',
+        backgroundColor: isActive ? colors.orange500 : 'transparent',
     },
 });
 
@@ -41,7 +41,7 @@ export const Tab: React.FC<TabProps> = ({ tabItems }) => {
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     return (
-        <div style={{ marginBottom: '32px', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '8px', position: 'relative' }}>
+        <div style={{ marginTop: '32px', marginBottom: '32px', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '8px', position: 'relative' }}>
             {tabItems.map((item, index) => {
                 const isActive = activeTab === index;
                 const buttonStyles = styles(isActive, isMobile);
