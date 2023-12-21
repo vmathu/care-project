@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
 const RatingSchema = new mongoose.Schema({
-    id_shop: Object,
-    id_user: Object,
+    id_order: Object,
     rating: Number,
     comment: String,
     file: [Object],

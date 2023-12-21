@@ -13,6 +13,7 @@ import { CustomSelect, CustomTextField } from "libs/ui";
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'libs/redux/store';
 import { setToast } from 'libs/redux/slice/toastSlice';
+import { useLocation } from 'react-router-dom';
 
 import { doPost } from 'libs/utils/axios';
 import * as Yup from 'yup'
@@ -23,6 +24,7 @@ import { deleteLoginData } from 'libs/utils/sessionHelper';
 
 import CustomTableDesktop from './Component/CustomTableDesktop'
 import CustomTableMobile from './Component/CustomTableMobile'
+import CustomDetail from './Component/CustomDetail';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { SearchAppBar } from 'libs/ui';
@@ -36,7 +38,15 @@ export default function Profile() {
     const theme = useTheme()
     const dispatch = useDispatch<AppDispatch>()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-    const [itemMenu, setItemMenu] = useState('Thông tin cơ bản')
+    const [itemMenu, setItemMenu] = useState('Thông tin cơ bản') 
+
+    const location = useLocation();
+    const query = new URLSearchParams(location.search);
+    const detailQuery = query.get('detail');
+
+    useEffect(() => {
+        if (detailQuery) setItemMenu('Chi tiết đơn hàng')
+    }, []); // Empty array means this runs once on mount and not again
 
     const [basicInfo, setBasicInfo] = useState<BasicInfoValues | null>(null);
     const defaultBasicInfo = useRef<BasicInfoValues | null>(null);
@@ -472,7 +482,7 @@ export default function Profile() {
             </Box>
         )
     }
-
+      
     return (
         <>
             <Grid container columns={{ lg: 12, xs: 4 }} style={{ height: '100vh', width: '100vw' }}>
@@ -494,6 +504,7 @@ export default function Profile() {
                             {itemMenu === 'Thông tin cơ bản' && handleBasicInfo()}
                             {itemMenu === 'Đơn hàng của tôi' && handleMyOrder()}
                             {itemMenu === 'Quán yêu thích' && handleFavorite()}
+                            {itemMenu === 'Chi tiết đơn hàng' && <CustomDetail />}
                         </Grid>
                     </Grid>
                 </Grid>

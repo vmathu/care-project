@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useTheme } from "@mui/material/styles";
+import { useNavigate } from 'react-router-dom';
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -17,6 +18,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 
 import { alpha } from "@mui/system";
 import Colors from "../../../libs/ui/color";
+import { TableHead } from "@mui/material";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -165,6 +167,8 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+  const navigate = useNavigate();
+
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number,
@@ -182,6 +186,7 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ width: "100%" }} aria-label="custom-table">
+      <TableHead>
         <TableRow>
           {headers.map((header, index) => (
             <TableCell
@@ -193,13 +198,20 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
             </TableCell>
           ))}
         </TableRow>
+      </TableHead>
         <TableBody>
           {(rowsPerPage > 0
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
-          ).map((row: any) => (
+          ).map((row: any, index) => (
             <TableRow
-              key={row.id}
+              key={row.id ? row.id : index}
+              onClick={() => { 
+                if (status) {
+                  navigate(`?detail=${row.id}`);
+                  window.location.reload();
+                }
+              }}
               sx={{
                 "& .MuiTableCell-root": {
                   borderBottom: 0,

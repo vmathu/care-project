@@ -18,6 +18,7 @@ import Skeleton from "@mui/material/Skeleton";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import RunningWithErrorsIcon from "@mui/icons-material/RunningWithErrors";
+import { useNavigate } from 'react-router-dom';
 
 import Colors from "../../../libs/ui/color";
 
@@ -167,6 +168,7 @@ function modifyStatusText(text: any) {
 export default function CustomTableMobile({ rows }: TableProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const navigate = useNavigate();
   const status =
     typeof Object.values(rows[0])[Object.values(rows[0]).length - 1] ===
     "string";
@@ -198,7 +200,13 @@ export default function CustomTableMobile({ rows }: TableProps) {
             : rows
           ).map((row: any, index) => (
             <TableRow
-              key={index}
+              key={row.id ? row.id : index}
+              onClick={() => {
+                if (status) {
+                  navigate(`?detail=${row.id}`);
+                  window.location.reload();
+                }
+              }}
               sx={{
                 display: "flex",
                 flexDirection: "row",
