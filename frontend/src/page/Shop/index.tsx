@@ -1,6 +1,6 @@
-import { Breadcrumbs, Divider, Grid, Rating, Typography } from "@mui/material";
+import { Breadcrumbs, Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { makeStyles, styled } from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 
 import ImagePreviewer from "./sections/ImagePreviewer";
 import GeneralInfo from "./sections/GeneralInfo";
