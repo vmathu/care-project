@@ -18,6 +18,7 @@ import Skeleton from "@mui/material/Skeleton";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import RunningWithErrorsIcon from "@mui/icons-material/RunningWithErrors";
+import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 import Colors from "../../../libs/ui/color";
@@ -168,10 +169,22 @@ function modifyStatusText(text: any) {
 export default function CustomTableMobile({ rows }: TableProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const navigate = useNavigate();
   const status =
     typeof Object.values(rows[0])[Object.values(rows[0]).length - 1] ===
     "string";
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  let requiredPage = Number(queryParams.get('page')) - 1;
+
+  if (requiredPage === null) requiredPage = 0;
+  if (requiredPage < 0) requiredPage = 0;
+  if (requiredPage > Math.ceil(rows.length / rowsPerPage) - 1) requiredPage = Math.ceil(rows.length / rowsPerPage) - 1;
+
+  React.useEffect(() => {
+    setPage(requiredPage);
+  }, []);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -182,6 +195,7 @@ export default function CustomTableMobile({ rows }: TableProps) {
     newPage: number,
   ) => {
     setPage(newPage);
+    navigate(`/Profile/MyOrder?page=${newPage + 1}`, { replace: true });
   };
 
   const handleChangeRowsPerPage = (
@@ -201,10 +215,9 @@ export default function CustomTableMobile({ rows }: TableProps) {
           ).map((row: any, index) => (
             <TableRow
               key={row.id ? row.id : index}
-              onClick={() => {
+              onClick={() => { 
                 if (status) {
-                  navigate(`?detail=${row.id}`);
-                  window.location.reload();
+                  window.location.href = `/Profile/MyOrder/${row.id}`;
                 }
               }}
               sx={{

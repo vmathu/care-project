@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useTheme } from "@mui/material/styles";
-import { useNavigate } from 'react-router-dom';
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,6 +14,8 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { alpha } from "@mui/system";
 import Colors from "../../../libs/ui/color";
@@ -163,17 +164,29 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
     typeof Object.values(rows[0])[Object.values(rows[0]).length - 1] ===
     "string";
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  let requiredPage = Number(queryParams.get('page')) - 1;
+
+  if (requiredPage === null) requiredPage = 0;
+  if (requiredPage < 0) requiredPage = 0;
+  if (requiredPage > Math.ceil(rows.length / rowsPerPage) - 1) requiredPage = Math.ceil(rows.length / rowsPerPage) - 1;
+
+  React.useEffect(() => {
+    setPage(requiredPage);
+  }, []);
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const navigate = useNavigate();
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ) => {
     setPage(newPage);
+    navigate(`/Profile/MyOrder?page=${newPage + 1}`, { replace: true });
   };
 
   const handleChangeRowsPerPage = (
@@ -208,8 +221,7 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
               key={row.id ? row.id : index}
               onClick={() => { 
                 if (status) {
-                  navigate(`?detail=${row.id}`);
-                  window.location.reload();
+                  window.location.href = `/Profile/MyOrder/${row.id}`;
                 }
               }}
               sx={{

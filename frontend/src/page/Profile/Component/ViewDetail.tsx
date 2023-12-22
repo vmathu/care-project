@@ -11,7 +11,6 @@ import { styled } from '@mui/material/styles';
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'libs/redux/store';
 import { setToast } from 'libs/redux/slice/toastSlice';
-import { useLocation } from 'react-router-dom';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 import { RatingValues } from "../interface";
@@ -68,16 +67,16 @@ function dataCard(isMobile: boolean, data: any) {
     );
 }
 
-export default function CustomDetail() {
+export default function ViewDetail() {
     const theme = useTheme()
     const dispatch = useDispatch<AppDispatch>()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
     const [showRatingForm, setShowRatingForm] = useState(false)
-    const [isRatingExist, setIsRatingExist] = useState(false)
+    const [isRatingExist, setIsRatingExist] = useState(true)
 
-    const location = useLocation();
-    const query = new URLSearchParams(location.search);
-    const detailQuery = query.get('detail');
+    let pathname = window.location.pathname
+    pathname += (pathname[pathname.length - 1] === '/') ? '' : '/'
+    const detailQuery = pathname.split('/')[3];
 
     const [ratingValues, setRatingValues] = useState<RatingValues>({
         star: 5,
@@ -109,7 +108,6 @@ export default function CustomDetail() {
                     comment: ratingResponse.data.comment,
                     images: ratingResponse.data.file,
                 });
-                console.log(ratingResponse.data)
             }
         };
 
@@ -122,7 +120,7 @@ export default function CustomDetail() {
         fullname: "Quán gần nhà",
         address: "123 Nguyễn Văn A",
         time_start: "2021-10-10 03:00",
-        time_end: "2024-10-10 05:00",
+        time_end: "2025-10-10 05:00",
         type: "3 người",
         contact: "0123456789",
         status: "completed",
@@ -138,7 +136,7 @@ export default function CustomDetail() {
                 <Grid item xs={4} lg={12}>
                     <Button variant="text" size="large"
                         onClick={() => {
-                            window.location.href = '/Profile'
+                            window.location.href = '/Profile/MyOrder'
                         }}>
                         <KeyboardArrowLeftIcon/>
                         Trở lại
@@ -253,14 +251,19 @@ export default function CustomDetail() {
                                             const formData = new FormData();
                                             formData.append('star', String(ratingValues.star));
                                             formData.append('comment', ratingValues.comment);
-                                            formData.append('orderId', detailQuery || '0'),
+                                            formData.append('orderId', detailQuery),
                                                 ratingValues.images.forEach((image, index) => {
                                                     formData.append('images', image);
                                                 });
 
                                             try {
                                                 const response = await doPostFile('rating', formData);
-                                                window.location.reload()
+                                                
+                                                if (response.data.status === 200)
+                                                    window.location.reload()
+                                                else {
+                                                    dispatch(setToast({ open: true, message: response.data.message, type: 'error' }));
+                                                }
                                             } catch (error) {
                                                 console.error(error);
                                             }
