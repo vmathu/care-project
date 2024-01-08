@@ -1,4 +1,5 @@
 module.exports = {
     dbConnection: require('./Connection'),
-    UserRepository: require('./repositories/UserRepository')
+    RatingRepository: require('./repositories/RatingRepository'),
+    UserRepository: require('./repositories/UserRepository'),   
 }

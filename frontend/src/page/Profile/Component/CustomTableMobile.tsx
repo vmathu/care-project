@@ -1,23 +1,28 @@
 import * as React from "react";
 import { useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
-import Skeleton from "@mui/material/Skeleton";
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import RunningWithErrorsIcon from "@mui/icons-material/RunningWithErrors";
+import {
+  Box,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TablePagination,
+  TableRow,
+  Paper,
+  IconButton,
+} from "@mui/material";
+import {
+  FirstPage as FirstPageIcon,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+  LastPage as LastPageIcon,
+  TaskAlt as TaskAltIcon,
+  HighlightOff as HighlightOffIcon,
+  RunningWithErrors as RunningWithErrorsIcon,
+} from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Colors from "../../../libs/ui/color";
 
@@ -149,14 +154,6 @@ function modifyStatusText(text: any) {
     return text;
   }
 
-  // if (text === 'completed')
-  //   return 'Đã xác nhận'
-
-  // if (text === 'rejected')
-  //   return 'Đã hủy'
-
-  // return 'Chờ xác nhận'
-
   if (text === "completed") return <TaskAltIcon />;
 
   if (text === "rejected") return <HighlightOffIcon />;
@@ -171,6 +168,20 @@ export default function CustomTableMobile({ rows }: TableProps) {
     typeof Object.values(rows[0])[Object.values(rows[0]).length - 1] ===
     "string";
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  let requiredPage = Number(queryParams.get("page")) - 1;
+
+  if (requiredPage === null) requiredPage = 0;
+  if (requiredPage < 0) requiredPage = 0;
+  if (requiredPage > Math.ceil(rows.length / rowsPerPage) - 1)
+    requiredPage = Math.ceil(rows.length / rowsPerPage) - 1;
+
+  React.useEffect(() => {
+    setPage(requiredPage);
+  }, []);
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -180,6 +191,7 @@ export default function CustomTableMobile({ rows }: TableProps) {
     newPage: number,
   ) => {
     setPage(newPage);
+    navigate(`/Profile/MyOrder?page=${newPage + 1}`, { replace: true });
   };
 
   const handleChangeRowsPerPage = (
@@ -198,7 +210,12 @@ export default function CustomTableMobile({ rows }: TableProps) {
             : rows
           ).map((row: any, index) => (
             <TableRow
-              key={index}
+              key={row.id ? row.id : index}
+              onClick={() => {
+                if (status) {
+                  window.location.href = `/Profile/MyOrder/${row.id}`;
+                }
+              }}
               sx={{
                 display: "flex",
                 flexDirection: "row",

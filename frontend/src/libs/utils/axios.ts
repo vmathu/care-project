@@ -38,5 +38,22 @@ const doAxios = (method: string, action: string, data: any) => {
   });
 };
 
+const doAxiosFile = (method: string, action: string, data: any) => {
+  const headers = {
+    "Content-Type": "multipart/form-data",
+    Accept: "application/json",
+  };
+
+  return axios({
+    headers,
+    method,
+    url: `${REACT_APP_WEB_API}/${action}`,
+    data,
+    responseType: "json",
+    timeout: 30000,
+  });
+}
+
 export const doPost = (action: string, data: any) => doAxios('POST', action, data)
 export const doGet = (action: string, data: any) => doAxios('GET', action, data)
+export const doPostFile = (action: string, data: any) => doAxiosFile('POST', action, data)

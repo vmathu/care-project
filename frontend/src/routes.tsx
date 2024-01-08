@@ -28,7 +28,7 @@ const routes: RouteObject[] = [
     Component: lazy(() => import("./page/Search")),
   },
   {
-    path: "/Profile",
+    path: "/Profile/*",
     Component: lazy(() => import("./page/Profile")),
   },
   {

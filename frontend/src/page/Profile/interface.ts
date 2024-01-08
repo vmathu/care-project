@@ -9,3 +9,9 @@ export interface BasicInfoValues {
     email: string,
     phone: string,
 }
+
+export interface RatingValues {
+    star: number,
+    comment: string,
+    images: File[],
+}

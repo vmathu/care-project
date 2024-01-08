@@ -10,8 +10,7 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'accepted', 'rejected', 'completed'],
         default: 'pending'
-    },
-    id_rating: Object
+    }
 }, {
     versionKey: false
 });
