@@ -1,25 +1,29 @@
 import * as React from "react";
 import { useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+  Paper,
+  IconButton,
+  styled,
+} from "@mui/material";
+import {
+  FirstPage as FirstPageIcon,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+  LastPage as LastPageIcon,
+} from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router-dom";
 import { alpha } from "@mui/system";
 import Colors from "../../../libs/ui/color";
-import { TableHead } from "@mui/material";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -31,6 +35,12 @@ interface TablePaginationActionsProps {
   ) => void;
 }
 
+const StyledTablePagination = styled(TablePagination)(({ theme }) => ({
+  fontFamily: "Be Vietnam pro",
+  "& .MuiButtonBase-root": {
+    fontSize: "1rem",
+  },
+}));
 function TablePaginationActions(props: TablePaginationActionsProps) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -167,11 +177,12 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  let requiredPage = Number(queryParams.get('page')) - 1;
+  let requiredPage = Number(queryParams.get("page")) - 1;
 
   if (requiredPage === null) requiredPage = 0;
   if (requiredPage < 0) requiredPage = 0;
-  if (requiredPage > Math.ceil(rows.length / rowsPerPage) - 1) requiredPage = Math.ceil(rows.length / rowsPerPage) - 1;
+  if (requiredPage > Math.ceil(rows.length / rowsPerPage) - 1)
+    requiredPage = Math.ceil(rows.length / rowsPerPage) - 1;
 
   React.useEffect(() => {
     setPage(requiredPage);
@@ -199,19 +210,19 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ width: "100%" }} aria-label="custom-table">
-      <TableHead>
-        <TableRow>
-          {headers.map((header, index) => (
-            <TableCell
-              key={index}
-              align="center"
-              sx={{ color: Colors.black500, fontWeight: "bold" }}
-            >
-              {header}
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
+        <TableHead>
+          <TableRow>
+            {headers.map((header, index) => (
+              <TableCell
+                key={index}
+                align="center"
+                sx={{ color: Colors.black500, fontWeight: "bold" }}
+              >
+                <Typography style={{ fontWeight: "bold" }}>{header}</Typography>
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
         <TableBody>
           {(rowsPerPage > 0
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -219,7 +230,7 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
           ).map((row: any, index) => (
             <TableRow
               key={row.id ? row.id : index}
-              onClick={() => { 
+              onClick={() => {
                 if (status) {
                   window.location.href = `/Profile/MyOrder/${row.id}`;
                 }
@@ -263,9 +274,11 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
                         : Colors.black200,
                   }}
                 >
-                  {index === Object.entries(row).length - 1
-                    ? modifyStatusText(Object.values(row)[index])
-                    : (Object.values(row)[index] as React.ReactNode)}
+                  <Typography>
+                    {index === headers.length - 1 && row.status && status
+                      ? modifyStatusText(Object.values(row)[index])
+                      : (Object.values(row)[index] as React.ReactNode)}
+                  </Typography>
                 </TableCell>
               ))}
             </TableRow>
@@ -278,7 +291,7 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TablePagination
+            <StyledTablePagination
               rowsPerPageOptions={[]}
               colSpan={4}
               count={rows.length}
@@ -293,6 +306,9 @@ export default function CustomTableDesktop({ rows, headers }: TableProps) {
               onPageChange={handleChangePage}
               ActionsComponent={TablePaginationActions}
               labelDisplayedRows={() => ""}
+              style={{
+                fontFamily: "Be Vietnam pro",
+              }}
             />
           </TableRow>
         </TableFooter>
