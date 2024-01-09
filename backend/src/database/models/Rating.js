@@ -1,0 +1,17 @@
+const mongoose = require('mongoose');
+
+const RatingSchema = new mongoose.Schema({
+    id_order: Object,
+    rating: Number,
+    comment: String,
+    file: [Object],
+    status: {
+        type: String,
+        enum: ['active', 'disabled'],
+        default: 'active'
+    }
+}, {
+    versionKey: false
+});
+
+module.exports = mongoose.model('Rating', RatingSchema, 'ratings');

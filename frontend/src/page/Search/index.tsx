@@ -110,6 +110,50 @@ const shops: Props[] = [
     price: "35k - 52k",
     rating: 2.5,
   },
+  {
+    img: [shopImg, shopImg],
+    fullname: "Lorem ipsum dolor sit amet",
+    address: {
+      street: "227 Nguyễn Văn Cừ phường 4",
+      district: "quận 5",
+      city: "thành phố Hồ Chí Minh",
+    },
+    price: "35k - 52k",
+    rating: 2.5,
+  },
+  {
+    img: [shopImg, shopImg],
+    fullname: "Lorem ipsum dolor sit amet",
+    address: {
+      street: "227 Nguyễn Văn Cừ phường 4",
+      district: "quận 5",
+      city: "thành phố Hồ Chí Minh",
+    },
+    price: "35k - 52k",
+    rating: 2.5,
+  },
+  {
+    img: [shopImg, shopImg],
+    fullname: "Lorem ipsum dolor sit amet",
+    address: {
+      street: "227 Nguyễn Văn Cừ phường 4",
+      district: "quận 5",
+      city: "thành phố Hồ Chí Minh",
+    },
+    price: "35k - 52k",
+    rating: 2.5,
+  },
+  {
+    img: [shopImg, shopImg],
+    fullname: "Lorem ipsum dolor sit amet",
+    address: {
+      street: "227 Nguyễn Văn Cừ phường 4",
+      district: "quận 5",
+      city: "thành phố Hồ Chí Minh",
+    },
+    price: "35k - 52k",
+    rating: 2.5,
+  },
 ];
 
 export default function SearchPage() {

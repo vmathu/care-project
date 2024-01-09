@@ -39,7 +39,12 @@ export const CustomCard = ({
   };
   return (
     <Card>
-      <CardMedia component="img" alt={fullname} height="204" image={img[0]} />
+      <CardMedia
+        component="img"
+        alt={fullname}
+        image={img[0]}
+        sx={{ aspectRatio: "16 / 9" }}
+      />
       <CardContent>
         <div style={{ ...spaceBetween }}>
           <Typography
