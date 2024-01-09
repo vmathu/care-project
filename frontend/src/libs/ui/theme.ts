@@ -209,6 +209,13 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          minHeight: "0 !important",
+        },
+      },
+    },
     MuiRating: {
       styleOverrides: {
         root: { color: "#EFD36E" },

@@ -4,3 +4,4 @@ export * from "./CustomSearch";
 export * from "./CustomCard";
 export * from "./NavBar";
 export * from "./Footer";
+export * from "./Tab";
