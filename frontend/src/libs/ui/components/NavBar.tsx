@@ -4,7 +4,6 @@ import LogoText from "../../../assets/app-logo-text.svg";
 import Avatar from "./Avatar";
 import colors from "../color";
 import { CustomSearch } from ".";
-import { Link } from "react-router-dom";
 
 export const SearchAppBar = ({}) => {
   const theme = useTheme();
