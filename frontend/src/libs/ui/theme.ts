@@ -20,11 +20,13 @@ theme = createTheme(theme, {
     },
     h1: {
       fontWeight: "600",
+      fontSize: "2rem",
     },
     h2: {
       fontWeight: "700",
     },
     h3: {
+      fontSize: "20px",
       fontWeight: "700",
     },
     h4: {
@@ -97,6 +99,7 @@ theme = createTheme(theme, {
             "&:hover": {
               background: colors.orange600,
               boxShadow: "none",
+              color: colors.white,
             },
           },
         },
@@ -142,8 +145,8 @@ theme = createTheme(theme, {
           props: { size: "large" },
           style: {
             fontWeight: 700,
-          }
-        }
+          },
+        },
       ],
       styleOverrides: {
         root: {
@@ -217,6 +220,36 @@ theme = createTheme(theme, {
       styleOverrides: {
         root: { color: "#EFD36E" },
         iconEmpty: { color: "#E6E6E6" },
+      },
+    },
+    MuiTablePagination: {
+      styleOverrides: {
+        spacer: {
+          display: "none",
+        },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          justifyContent: "center",
+        },
+      },
+    },
+    MuiStepLabel: {
+      styleOverrides: {
+        label: {
+          fontFamily: '"Be Vietnam Pro", san-serif',
+          fontWeight: 500,
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Be Vietnam Pro", san-serif',
+          fontWeight: 500,
+        },
       },
     },
   },

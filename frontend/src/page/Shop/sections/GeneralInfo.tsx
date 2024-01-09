@@ -111,12 +111,12 @@ export default function GeneralInfo() {
   const classes = useStyles();
 
   const total = data.rate.reduce(
-    (previousValue, currentValue) => previousValue + currentValue
+    (previousValue, currentValue) => previousValue + currentValue,
   );
   const sum =
     data.rate.reduce(
       (previousValue, currentValue, currentIndex) =>
-        previousValue + currentValue * (currentIndex + 1)
+        previousValue + currentValue * (currentIndex + 1),
     ) / total;
   return (
     <Root>

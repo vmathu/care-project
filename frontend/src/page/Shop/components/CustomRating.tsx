@@ -101,12 +101,12 @@ function nFormatter(num: number) {
 
 export default function CustomRating(value: RatingBarProps) {
   const total = value?.value.reduce(
-    (previousValue, currentValue) => previousValue + currentValue
+    (previousValue, currentValue) => previousValue + currentValue,
   );
   const sum =
     value?.value.reduce(
       (previousValue, currentValue, currentIndex) =>
-        previousValue + currentValue * (currentIndex + 1)
+        previousValue + currentValue * (currentIndex + 1),
     ) / total;
   console.log(sum);
   return (

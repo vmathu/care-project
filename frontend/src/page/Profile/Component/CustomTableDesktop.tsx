@@ -1,0 +1,318 @@
+import * as React from "react";
+import { useTheme } from "@mui/material/styles";
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+  Paper,
+  IconButton,
+  styled,
+} from "@mui/material";
+import {
+  FirstPage as FirstPageIcon,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+  LastPage as LastPageIcon,
+} from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { alpha } from "@mui/system";
+import Colors from "../../../libs/ui/color";
+
+interface TablePaginationActionsProps {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    newPage: number,
+  ) => void;
+}
+
+const StyledTablePagination = styled(TablePagination)(({ theme }) => ({
+  fontFamily: "Be Vietnam pro",
+  "& .MuiButtonBase-root": {
+    fontSize: "1rem",
+  },
+}));
+function TablePaginationActions(props: TablePaginationActionsProps) {
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
+
+  const handleFirstPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  const totalPages = Math.ceil(count / rowsPerPage);
+  const pageButtons = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    if (
+      i === 1 ||
+      i === 2 ||
+      i === totalPages - 1 ||
+      i === totalPages ||
+      i === page ||
+      i === page + 1 ||
+      i === page + 2
+    ) {
+      pageButtons.push(
+        <IconButton
+          key={i}
+          onClick={(event) => onPageChange(event, i - 1)}
+          disabled={page === i - 1}
+        >
+          {i}
+        </IconButton>,
+      );
+    } else if (i === page - 1 || i === page + 3) {
+      pageButtons.push(
+        <IconButton key={i} disabled={true}>
+          {"..."}
+        </IconButton>,
+      );
+    }
+  }
+
+  return (
+    <Box
+      sx={{ flexShrink: 0, ml: 2.5 }}
+      style={{ display: "flex", justifyContent: "center" }}
+    >
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowRight />
+        ) : (
+          <KeyboardArrowLeft />
+        )}
+      </IconButton>
+      {pageButtons}
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowLeft />
+        ) : (
+          <KeyboardArrowRight />
+        )}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
+      </IconButton>
+    </Box>
+  );
+}
+
+interface Row {
+  [key: string]: string | number | JSX.Element | Object | undefined;
+}
+
+interface TableProps {
+  rows: Row[];
+  headers: string[];
+}
+
+function modifyStatusText(text: any) {
+  if (typeof text !== "string") {
+    return text;
+  }
+
+  if (text === "completed") return "Đã xác nhận";
+
+  if (text === "rejected") return "Đã hủy";
+
+  return "Chờ xác nhận";
+}
+
+export default function CustomTableDesktop({ rows, headers }: TableProps) {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const status =
+    typeof Object.values(rows[0])[Object.values(rows[0]).length - 1] ===
+    "string";
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  let requiredPage = Number(queryParams.get("page")) - 1;
+
+  if (requiredPage === null) requiredPage = 0;
+  if (requiredPage < 0) requiredPage = 0;
+  if (requiredPage > Math.ceil(rows.length / rowsPerPage) - 1)
+    requiredPage = Math.ceil(rows.length / rowsPerPage) - 1;
+
+  React.useEffect(() => {
+    setPage(requiredPage);
+  }, []);
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    setPage(newPage);
+    navigate(`/Profile/MyOrder?page=${newPage + 1}`, { replace: true });
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  return (
+    <TableContainer component={Paper}>
+      <Table sx={{ width: "100%" }} aria-label="custom-table">
+        <TableHead>
+          <TableRow>
+            {headers.map((header, index) => (
+              <TableCell
+                key={index}
+                align="center"
+                sx={{ color: Colors.black500, fontWeight: "bold" }}
+              >
+                <Typography style={{ fontWeight: "bold" }}>{header}</Typography>
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(rowsPerPage > 0
+            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : rows
+          ).map((row: any, index) => (
+            <TableRow
+              key={row.id ? row.id : index}
+              onClick={() => {
+                if (status) {
+                  window.location.href = `/Profile/MyOrder/${row.id}`;
+                }
+              }}
+              sx={{
+                "& .MuiTableCell-root": {
+                  borderBottom: 0,
+                },
+                "&:hover": {
+                  backgroundColor: Colors.black50,
+                },
+                "&:hover .MuiTableCell-root": {
+                  color: Colors.black500,
+                },
+                "&:hover .MuiTableCell-root:last-child": {
+                  color: status
+                    ? alpha(
+                        row.status === "rejected"
+                          ? Colors.error
+                          : row.status === "completed"
+                            ? Colors.success
+                            : Colors.warning,
+                        1,
+                      )
+                    : Colors.error,
+                },
+              }}
+            >
+              {headers.map((header, index) => (
+                <TableCell
+                  key={index}
+                  align="center"
+                  sx={{
+                    color:
+                      index === headers.length - 1 && row.status && status
+                        ? row.status === "rejected"
+                          ? alpha(Colors.error, 0.65)
+                          : row.status === "completed"
+                            ? alpha(Colors.success, 0.65)
+                            : alpha(Colors.warning, 0.65)
+                        : Colors.black200,
+                  }}
+                >
+                  <Typography>
+                    {index === headers.length - 1 && row.status && status
+                      ? modifyStatusText(Object.values(row)[index])
+                      : (Object.values(row)[index] as React.ReactNode)}
+                  </Typography>
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 53 * emptyRows }}>
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <StyledTablePagination
+              rowsPerPageOptions={[]}
+              colSpan={4}
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  "aria-label": "rows per page",
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              ActionsComponent={TablePaginationActions}
+              labelDisplayedRows={() => ""}
+              style={{
+                fontFamily: "Be Vietnam pro",
+              }}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TableContainer>
+  );
+}

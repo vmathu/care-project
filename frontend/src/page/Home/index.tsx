@@ -3,7 +3,7 @@ import { styled } from "@mui/system";
 import { Grid, Box, Typography } from "@mui/material";
 import { shopImg } from "assets/images";
 import { Tab } from "libs/ui/components";
-import { Slider } from './components/Slider';
+import { Slider } from "./components/Slider";
 
 const ShopGrid = styled(Grid)(({ theme }) => ({
   margin: "0 80px !important",
@@ -16,21 +16,21 @@ const ShopGrid = styled(Grid)(({ theme }) => ({
 
 const ShopScroll = styled(Grid)(({ theme }) => ({
   margin: "0 80px !important",
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'nowrap',
-  overflowX: 'auto',
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "nowrap",
+  overflowX: "auto",
   width: "-webkit-fill-available !important",
-  boxSizing: 'border-box',
-  '&::-webkit-scrollbar': {
-    display: 'none',
+  boxSizing: "border-box",
+  "&::-webkit-scrollbar": {
+    display: "none",
   },
   [theme.breakpoints.down("sm")]: {
-    flexDirection: 'column',
-    overflowX: 'auto',
+    flexDirection: "column",
+    overflowX: "auto",
     marginLeft: "0 !important",
     marginRight: "1rem !important",
-    boxSizing: 'border-box',
+    boxSizing: "border-box",
   },
 }));
 
@@ -66,32 +66,30 @@ type ShopSectionProps = {
 };
 
 const ShopSection = ({ title, children }: ShopSectionProps) => (
-  <section style={{ padding: '0 16px' }}>
+  <section style={{ padding: "0 16px" }}>
     <Box sx={{ marginBottom: 2 }}>
-      <Typography variant="h4" align="center">{title}</Typography>
+      <Typography variant="h4" align="center">
+        {title}
+      </Typography>
     </Box>
     {children}
   </section>
 );
 
 interface SpacedComponentProps {
-  children: JSX.Element | JSX.Element[]
+  children: JSX.Element | JSX.Element[];
 }
 
 const SpacedComponent: React.FC<SpacedComponentProps> = ({ children }) => (
-  <div style={{ marginBottom: '60px' }}>
-    {children}
-  </div>
+  <div style={{ marginBottom: "60px" }}>{children}</div>
 );
 
 export default function HomePage() {
-  const tabItems = ['Top đánh giá', 'Gần bạn', 'Yêu thích'];
+  const tabItems = ["Top đánh giá", "Gần bạn", "Yêu thích"];
   return (
     <div>
       <SearchAppBar />
-      <SpacedComponent>
-        <Slider />
-      </SpacedComponent>
+      <Slider />
       <SpacedComponent>
         <ShopSection title="Gợi ý hôm nay">
           <Tab tabItems={tabItems} />

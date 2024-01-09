@@ -8,7 +8,7 @@ import { ReduxProvider } from "libs/redux/provider.tsx";
 import SuspenseLoading from "libs/ui/components/SuspenseLoading.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>  
+  <React.StrictMode>
     <ReduxProvider>
       <ThemeProvider theme={theme}>
         <Suspense fallback={<SuspenseLoading />}>
@@ -16,5 +16,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </Suspense>
       </ThemeProvider>
     </ReduxProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

@@ -70,5 +70,8 @@ src
 
 ## Available Scripts
 
-- `dev`: Run dev server
-- `lint`: Run ESLint on the entire project
+- `yarn dev`: Run dev server
+- `yarn lint`: Run ESLint on the entire project
+- `yarn prettier . --write`: Format everthing
+- `yarn prettier --write app/`: Format a certain directory
+- `npx prettier . --check`: Only check files.

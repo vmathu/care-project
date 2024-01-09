@@ -1,11 +1,12 @@
 import { AppBar, Toolbar, Box, useTheme, useMediaQuery } from "@mui/material";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import LogoText from "../../../assets/app-logo-text.svg";
 import Avatar from "./Avatar";
 import colors from "../color";
 import { CustomSearch } from ".";
+import { Link } from "react-router-dom";
 
-export const SearchAppBar = ({ }) => {
+export const SearchAppBar = ({}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
