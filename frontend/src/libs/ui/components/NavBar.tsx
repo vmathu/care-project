@@ -15,7 +15,7 @@ export const SearchAppBar = ({}) => {
       style={{ backgroundColor: colors.white }}
       elevation={0}
     >
-      <Toolbar style={{ padding: isMobile ? "16px" : "20px 80px" }}>
+      <Toolbar style={{ padding: isMobile ? "4px 16px" : "12px 80px" }}>
         {/* <img src={LogoText} alt="logo" style={{ width: '', height: isMobile ? '20px' : '40px' }} /> */}
         <Link to="/">
           <img

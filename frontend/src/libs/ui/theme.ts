@@ -35,6 +35,9 @@ theme = createTheme(theme, {
     h5: {
       fontWeight: "700",
     },
+    h6: {
+      fontWeight: "700",
+    },
     body1: {
       [theme.breakpoints.down("sm")]: {
         fontSize: "0.875rem",
@@ -226,13 +229,6 @@ theme = createTheme(theme, {
       styleOverrides: {
         spacer: {
           display: "none",
-        },
-      },
-    },
-    MuiToolbar: {
-      styleOverrides: {
-        root: {
-          justifyContent: "center",
         },
       },
     },

@@ -67,7 +67,7 @@ type ShopSectionProps = {
 
 const ShopSection = ({ title, children }: ShopSectionProps) => (
   <section style={{ padding: "0 16px" }}>
-    <Box sx={{ marginBottom: 2 }}>
+    <Box sx={{ marginBottom: 4, marginTop: 4 }}>
       <Typography variant="h4" align="center">
         {title}
       </Typography>
