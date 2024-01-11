@@ -7,6 +7,7 @@ import { IconButton, Rating } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const spaceBetween: React.CSSProperties = {
   display: "flex",
@@ -24,31 +25,43 @@ type Props = {
   };
   price: string;
   rating: number;
+  _id?: string;
 };
 
-export const CustomCard = ({ imgs, name, address, price, rating }: Props) => {
+export const CustomCard = ({
+  imgs,
+  name,
+  address,
+  price,
+  rating,
+  _id,
+}: Props) => {
   const [favState, setFavState] = useState(false);
   const handleFavClick = () => {
     setFavState(!favState);
   };
   return (
     <Card>
-      <CardMedia
-        component="img"
-        alt={name}
-        image={imgs[0]}
-        sx={{ aspectRatio: "16 / 9" }}
-      />
+      <Link to={`/Shop/${_id}`}>
+        <CardMedia
+          component="img"
+          alt={name}
+          image={imgs[0]}
+          sx={{ aspectRatio: "16 / 9" }}
+        />
+      </Link>
       <CardContent>
         <div style={{ ...spaceBetween }}>
-          <Typography
-            gutterBottom
-            variant="body1"
-            component="div"
-            sx={{ fontWeight: "bold" }}
-          >
-            {name}
-          </Typography>
+          <Link to={`/Shop/${_id}`} style={{color: colors.black400}}>
+            <Typography
+              gutterBottom
+              variant="body1"
+              component="div"
+              sx={{ fontWeight: "bold" }}
+            >
+              {name}
+            </Typography>
+          </Link>
           <IconButton onClick={handleFavClick}>
             {favState ? (
               <FavoriteIcon sx={{ color: colors.orange500 }} />
