@@ -51,9 +51,7 @@ const labels = [
   "Check in",
   "Học bài",
   "Cho quay/ chụp",
-  "Label",
-  "Label",
-  "Label",
+  "Mang đồ ăn ngoài",
 ];
 
 type Props = {

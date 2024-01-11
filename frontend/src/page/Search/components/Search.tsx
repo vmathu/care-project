@@ -58,8 +58,8 @@ export const Search = ({ placeholder, value }: Props) => {
       </SearchIconWrapper>
       <StyledInputBase
         placeholder={placeholder ?? "Search..."}
-        inputProps={{ "aria-label": "search" }}
-        defaultValue={value}
+        inputProps={{ "aria-label": "search", 'id': 'customSearch' }}
+        value={value}
       />
     </SearchWrapper>
   );
