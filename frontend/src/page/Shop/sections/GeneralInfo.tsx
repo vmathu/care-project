@@ -8,7 +8,12 @@ import {
   ToggleButtonGroup,
   toggleButtonGroupClasses,
   toggleButtonClasses,
+  Drawer,
+  IconButton,
+  Box,
   styled,
+  Divider,
+  useMediaQuery,
 } from "@mui/material";
 import {
   LocationOnRounded,
@@ -16,6 +21,7 @@ import {
   AccessTimeRounded,
   AttachMoneyRounded,
   LocalParkingRounded,
+  CloseRounded,
 } from "@mui/icons-material";
 
 import color from "libs/ui/color";
@@ -88,6 +94,40 @@ const Rate = styled("div")(() => ({
   alignItems: "center",
 }));
 
+const CardCheckout = styled("div")(({ theme }) => ({
+  display: "flex",
+  padding: "1rem",
+  gap: "1.25rem",
+}));
+
+const DrawerHeader = () => {
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "0.5rem 1rem",
+        }}
+      >
+        <Typography>Đơn đặt chỗ của bạn</Typography>
+        <IconButton size="small">
+          <CloseRounded />
+        </IconButton>
+      </div>
+      <Divider />
+    </div>
+  );
+};
+
+const DrawerContent = styled("div")(() => ({
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+}));
+
 const TagList = () => {
   const classes = useStyles();
   const tags = data.tags;
@@ -108,6 +148,7 @@ type InfoProps = {
 };
 
 type Props = {
+  imgs: string[] | [];
   address: {
     street: string;
     district: string;
@@ -129,6 +170,8 @@ type Props = {
 
 export default function GeneralInfo(shop: Props) {
   const [seat, setSeat] = React.useState<string | null>("2");
+  const [drawer, setDrawer] = React.useState(false);
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
 
   const handleSeat = (
     _event: React.MouseEvent<HTMLElement>,
@@ -170,6 +213,20 @@ export default function GeneralInfo(shop: Props) {
       (previousValue, currentValue, currentIndex) =>
         previousValue + currentValue * (currentIndex + 1),
     ) / total;
+
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+
+      setDrawer(open);
+    };
+
   return (
     <Root>
       <TagList />
@@ -225,9 +282,49 @@ export default function GeneralInfo(shop: Props) {
           </ToggleButton>
         </StyledToggleButtonGroup>
       </div>
-      <Button variant="contained" size="large">
+      <Button variant="contained" size="large" onClick={toggleDrawer(true)}>
         ĐẶT NGAY
       </Button>
+      <Drawer anchor="right" open={drawer} onClose={toggleDrawer(false)}>
+        <Box
+          sx={{
+            width: isMobile ? "100vw" : 300,
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <DrawerHeader />
+          <DrawerContent>
+            <CardCheckout
+              style={{ padding: "1rem", display: "flex", gap: "1.25rem" }}
+            >
+              <img
+                style={{
+                  width: "4rem",
+                  height: "4rem",
+                  objectFit: "cover",
+                  borderRadius: "2px",
+                }}
+                src={shop.imgs ? shop.imgs[0] : ""}
+              />
+              <div>
+                <Typography>{shop.name}</Typography>
+                <Typography>Bàn 10 chỗ: 8h - 12h </Typography>
+              </div>
+            </CardCheckout>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={toggleDrawer(false)}
+              style={{ margin: "1rem" }}
+            >
+              XÁC NHẬN
+            </Button>
+          </DrawerContent>
+        </Box>
+      </Drawer>
     </Root>
   );
 }
