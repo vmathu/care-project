@@ -171,8 +171,8 @@ export default function SearchPage() {
         {shops.map((shop, id) => (
           <Grid item xs={12} sm={3} key={id}>
             <CustomCard
-              img={shop.img}
-              fullname={shop.fullname}
+              imgs={shop.img}
+              name={shop.fullname}
               address={shop.address}
               price={shop.price}
               rating={shop.rating}

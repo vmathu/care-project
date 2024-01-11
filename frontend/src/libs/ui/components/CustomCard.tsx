@@ -1,12 +1,16 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  IconButton,
+  Rating,
+} from "@mui/material";
 import { colors } from "..";
-import { IconButton, Rating } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const spaceBetween: React.CSSProperties = {
   display: "flex",
@@ -15,6 +19,7 @@ const spaceBetween: React.CSSProperties = {
 };
 
 type Props = {
+  id: string;
   imgs: string[];
   name: string;
   address: {
@@ -26,29 +31,43 @@ type Props = {
   rating: number;
 };
 
-export const CustomCard = ({ imgs, name, address, price, rating }: Props) => {
+export const CustomCard = ({
+  id,
+  imgs,
+  name,
+  address,
+  price,
+  rating,
+}: Props) => {
   const [favState, setFavState] = useState(false);
   const handleFavClick = () => {
     setFavState(!favState);
   };
   return (
     <Card>
-      <CardMedia
-        component="img"
-        alt={name}
-        image={imgs[0]}
-        sx={{ aspectRatio: "16 / 9" }}
-      />
+      <Link to={`/shop/${id}`} style={{ textDecoration: "none" }}>
+        <CardMedia
+          component="img"
+          alt={name}
+          image={imgs[0]}
+          sx={{ aspectRatio: "16 / 9" }}
+        />
+      </Link>
       <CardContent>
         <div style={{ ...spaceBetween }}>
-          <Typography
-            gutterBottom
-            variant="body1"
-            component="div"
-            sx={{ fontWeight: "bold" }}
+          <Link
+            to={`/shop/${id}`}
+            style={{ textDecoration: "none", color: "inherit" }}
           >
-            {name}
-          </Typography>
+            <Typography
+              gutterBottom
+              variant="body1"
+              component="div"
+              sx={{ fontWeight: "bold" }}
+            >
+              {name}
+            </Typography>
+          </Link>
           <IconButton onClick={handleFavClick}>
             {favState ? (
               <FavoriteIcon sx={{ color: colors.orange500 }} />
