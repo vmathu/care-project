@@ -29,15 +29,16 @@ type Props = {
   };
   price: string;
   rating: number;
+  _id?: string;
 };
 
 export const CustomCard = ({
-  id,
   imgs,
   name,
   address,
   price,
   rating,
+  _id,
 }: Props) => {
   const [favState, setFavState] = useState(false);
   const handleFavClick = () => {
@@ -45,7 +46,7 @@ export const CustomCard = ({
   };
   return (
     <Card>
-      <Link to={`/shop/${id}`} style={{ textDecoration: "none" }}>
+      <Link to={`/Shop/${_id}`}>
         <CardMedia
           component="img"
           alt={name}
@@ -55,10 +56,7 @@ export const CustomCard = ({
       </Link>
       <CardContent>
         <div style={{ ...spaceBetween }}>
-          <Link
-            to={`/shop/${id}`}
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
+          <Link to={`/Shop/${_id}`} style={{ color: "inherit" }}>
             <Typography
               gutterBottom
               variant="body1"

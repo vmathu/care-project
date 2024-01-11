@@ -2,6 +2,7 @@ import { styled } from "@mui/material/styles";
 import { InputBase, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { colors } from "..";
+import { redirect, useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -46,9 +47,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 type Props = {
   placeholder?: string;
+  value?: string;
 };
 
-export const CustomSearch = ({ placeholder }: Props) => {
+export const CustomSearch = ({ placeholder, value }: Props) => {
+  const navigate = useNavigate();
   return (
     <>
       <Search sx={{ display: { xs: "none", sm: "flex" } }}>
@@ -58,6 +61,12 @@ export const CustomSearch = ({ placeholder }: Props) => {
         <StyledInputBase
           placeholder={placeholder ?? "Search..."}
           inputProps={{ "aria-label": "search" }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              navigate(`/Search?q=${event.currentTarget.value}`);
+            }
+          }}
+          defaultValue={value}
         />
       </Search>
       <IconButton

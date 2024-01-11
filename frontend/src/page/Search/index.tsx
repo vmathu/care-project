@@ -2,7 +2,9 @@ import { CustomCard, colors, SearchAppBar, Footer } from "libs/ui";
 import { Search, Tag } from "./components";
 import { styled } from "@mui/material/styles";
 import { Grid } from "@mui/material";
-import { shopImg } from "assets/images";
+import { useLoaderData } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { doGet } from "libs/utils/axios";
 
 const rootStyle: React.CSSProperties = {
   display: "flex",
@@ -55,8 +57,8 @@ const labels = [
 ];
 
 type Props = {
-  img: string[];
-  fullname: string;
+  imgs: string[];
+  name: string;
   address: {
     street: string;
     district: string;
@@ -65,103 +67,27 @@ type Props = {
   price: string;
   rating: number;
 };
-const shops: Props[] = [
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-];
 
 export default function SearchPage() {
+  let q = useLoaderData();
+  const [shops, setShops] = useState<Array<Props>>([]);
+
+  useEffect(() => {
+    doGet("shop", {})
+      .then((response) => {
+        const data: Props[] = response.data;
+        return data;
+      })
+      .then((data) => {
+        setShops(data);
+      });
+  }, []);
+
   return (
     <div style={{ ...rootStyle }}>
-      <SearchAppBar />
+      <SearchAppBar value={q as string} />
       <div style={{ ...recStyle }}></div>
-      <Search />
+      <Search value={q as string} />
       <Tags>
         {labels.map((label, id) => (
           <Tag label={label} key={id} />
@@ -170,13 +96,7 @@ export default function SearchPage() {
       <ShopGrid container spacing={{ xs: 2, sm: 4 }}>
         {shops.map((shop, id) => (
           <Grid item xs={12} sm={3} key={id}>
-            <CustomCard
-              imgs={shop.img}
-              name={shop.fullname}
-              address={shop.address}
-              price={shop.price}
-              rating={shop.rating}
-            />
+            <CustomCard {...shop} />
           </Grid>
         ))}
       </ShopGrid>

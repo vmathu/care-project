@@ -26,6 +26,11 @@ const routes: RouteObject[] = [
   {
     path: "/Search",
     Component: lazy(() => import("./page/Search")),
+    loader: async ({ request }) => {
+      const url = new URL(request.url);
+      const q = url.searchParams.get("q");
+      return q;
+    },
   },
   {
     path: "/Profile/*",
