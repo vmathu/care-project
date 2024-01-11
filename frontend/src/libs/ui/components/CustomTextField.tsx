@@ -9,7 +9,7 @@ const style: React.CSSProperties = {
 };
 
 type Props = {
-  label: string;
+  label?: string;
   containerStyle?: React.CSSProperties;
   textFieldProps?: TextFieldProps;
 };

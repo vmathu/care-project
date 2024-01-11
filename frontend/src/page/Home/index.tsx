@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { CustomCard, SearchAppBar, Footer } from "libs/ui";
-import { styled } from "@mui/system";
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography, styled } from "@mui/material";
 import { Tab } from "libs/ui/components";
 import { Slider } from "./components/Slider";
 
@@ -34,6 +33,7 @@ const ShopScroll = styled(Grid)(({ theme }) => ({
 }));
 
 type Props = {
+  _id: string;
   imgs: string[];
   name: string;
   address: {
@@ -93,9 +93,13 @@ export default function HomePage() {
           <Tab tabItems={tabItems} />
           <ShopGrid container spacing={{ xs: 2, sm: 4 }}>
             {shops.map((shop, id) => {
+              const shopData = {
+                ...shop,
+                id: shop._id,
+              };
               return (
                 <Grid item xs={12} sm={3} key={id}>
-                  <CustomCard {...shop} />
+                  <CustomCard {...shopData} />
                 </Grid>
               );
             })}
@@ -105,11 +109,17 @@ export default function HomePage() {
       <SpacedComponent>
         <ShopSection title="Đã đến gần đây">
           <ShopScroll item container direction="row" spacing={{ xs: 2, sm: 4 }}>
-            {shops.map((shop, id) => (
-              <Grid item xs={12} sm={3} key={id}>
-                <CustomCard {...shop} />
-              </Grid>
-            ))}
+            {shops.map((shop, id) => {
+              const shopData = {
+                ...shop,
+                id: shop._id,
+              };
+              return (
+                <Grid item xs={12} sm={3} key={id}>
+                  <CustomCard {...shopData} />
+                </Grid>
+              );
+            })}
           </ShopScroll>
         </ShopSection>
       </SpacedComponent>

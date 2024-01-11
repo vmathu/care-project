@@ -99,7 +99,9 @@ export const Slider = () => {
         ))}
       </div>
       <BlackLayer />
-      <HeroText>Chúng tôi là CARE</HeroText>
+      <HeroText>
+        Take <span style={{ color: colors.orange500 }}>CARE</span> everyday.
+      </HeroText>
       <div style={styles.dotsContainer()}>
         {!isMobile &&
           images.map((_, index) => (

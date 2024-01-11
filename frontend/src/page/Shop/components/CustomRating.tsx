@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import color from "libs/ui/color";
 
 type RatingBarProps = {
+  sum?: number;
   value: Array<number>;
 };
 
@@ -99,25 +100,31 @@ function nFormatter(num: number) {
     : "0";
 }
 
-export default function CustomRating(value: RatingBarProps) {
-  const total = value?.value.reduce(
+export default function CustomRating({ sum, value }: RatingBarProps) {
+  const total = value.reduce(
     (previousValue, currentValue) => previousValue + currentValue,
   );
-  const sum =
-    value?.value.reduce(
+  const sumCal =
+    value.reduce(
       (previousValue, currentValue, currentIndex) =>
         previousValue + currentValue * (currentIndex + 1),
     ) / total;
-  console.log(sum);
   return (
     <Root>
       <RatingTitle>
-        <RatingStar size="large" defaultValue={sum} readOnly precision={0.1} />
-        <Typography variant="h4">{Math.floor(sum * 10) / 10}</Typography>
+        <RatingStar
+          size="large"
+          defaultValue={sum ? sum : sumCal}
+          readOnly
+          precision={0.1}
+        />
+        <Typography variant="h4">
+          {Math.floor((sum ? sum : sumCal) * 10) / 10}
+        </Typography>
       </RatingTitle>
       <Divider />
       <RatingArea>
-        {value?.value.map((item, index) => (
+        {value.map((item, index) => (
           <RatingItem>
             <Typography style={{ width: "20px" }}>{index + 1}</Typography>
             <RatingBackground>

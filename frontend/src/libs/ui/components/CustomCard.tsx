@@ -1,9 +1,12 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  IconButton,
+  Rating,
+} from "@mui/material";
 import { colors } from "..";
-import { IconButton, Rating } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useState } from "react";
@@ -16,6 +19,7 @@ const spaceBetween: React.CSSProperties = {
 };
 
 type Props = {
+  id: string;
   imgs: string[];
   name: string;
   address: {
@@ -52,7 +56,7 @@ export const CustomCard = ({
       </Link>
       <CardContent>
         <div style={{ ...spaceBetween }}>
-          <Link to={`/Shop/${_id}`} style={{color: colors.black400}}>
+          <Link to={`/Shop/${_id}`} style={{ color: "inherit" }}>
             <Typography
               gutterBottom
               variant="body1"
