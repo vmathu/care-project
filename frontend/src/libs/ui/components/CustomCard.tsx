@@ -15,8 +15,8 @@ const spaceBetween: React.CSSProperties = {
 };
 
 type Props = {
-  img: string[];
-  fullname: string;
+  imgs: string[];
+  name: string;
   address: {
     street: string;
     district: string;
@@ -26,13 +26,7 @@ type Props = {
   rating: number;
 };
 
-export const CustomCard = ({
-  img,
-  fullname,
-  address,
-  price,
-  rating,
-}: Props) => {
+export const CustomCard = ({ imgs, name, address, price, rating }: Props) => {
   const [favState, setFavState] = useState(false);
   const handleFavClick = () => {
     setFavState(!favState);
@@ -41,8 +35,8 @@ export const CustomCard = ({
     <Card>
       <CardMedia
         component="img"
-        alt={fullname}
-        image={img[0]}
+        alt={name}
+        image={imgs[0]}
         sx={{ aspectRatio: "16 / 9" }}
       />
       <CardContent>
@@ -53,7 +47,7 @@ export const CustomCard = ({
             component="div"
             sx={{ fontWeight: "bold" }}
           >
-            {fullname}
+            {name}
           </Typography>
           <IconButton onClick={handleFavClick}>
             {favState ? (
