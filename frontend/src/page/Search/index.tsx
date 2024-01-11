@@ -5,6 +5,7 @@ import { Grid } from "@mui/material";
 import { useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { doGet } from "libs/utils/axios";
+import { checkLoginToken } from "libs/utils/sessionHelper";
 
 const rootStyle: React.CSSProperties = {
   display: "flex",
@@ -47,12 +48,7 @@ const ShopGrid = styled(Grid)(({ theme }) => ({
   },
 }));
 
-const labels = [
-  "Check in",
-  "Học bài",
-  "Cho quay/ chụp",
-  "Mang đồ ăn ngoài",
-];
+const labels = ["Check in", "Học bài", "Cho quay/ chụp", "Mang đồ ăn ngoài"];
 
 type Props = {
   imgs: string[];
@@ -67,6 +63,7 @@ type Props = {
 };
 
 export default function SearchPage() {
+  if (!checkLoginToken()) window.location.href = "/SignIn";
   let q = useLoaderData();
   const [shops, setShops] = useState<Array<Props>>([]);
 

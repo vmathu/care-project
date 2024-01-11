@@ -2,7 +2,8 @@ import { styled } from "@mui/material/styles";
 import { InputBase, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { colors } from "..";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -52,6 +53,14 @@ type Props = {
 
 export const CustomSearch = ({ placeholder, value }: Props) => {
   const navigate = useNavigate();
+  const [changeVal, setChangeVal] = useState(value);
+  const handleChange = (val: string) => {
+    setChangeVal(val);
+  };
+
+  useEffect(() => {
+    setChangeVal(value);
+  }, [value]);
   return (
     <>
       <Search sx={{ display: { xs: "none", sm: "flex" } }}>
@@ -66,7 +75,8 @@ export const CustomSearch = ({ placeholder, value }: Props) => {
               navigate(`/Search?q=${event.currentTarget.value}`);
             }
           }}
-          defaultValue={value}
+          value={changeVal}
+          onChange={(e) => handleChange(e.currentTarget.value)}
         />
       </Search>
       <IconButton
