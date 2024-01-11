@@ -100,27 +100,6 @@ const CardCheckout = styled("div")(({ theme }) => ({
   gap: "1.25rem",
 }));
 
-const DrawerHeader = () => {
-  return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "0.5rem 1rem",
-        }}
-      >
-        <Typography>Đơn đặt chỗ của bạn</Typography>
-        <IconButton size="small">
-          <CloseRounded />
-        </IconButton>
-      </div>
-      <Divider />
-    </div>
-  );
-};
-
 const DrawerContent = styled("div")(() => ({
   height: "100%",
   display: "flex",
@@ -295,7 +274,22 @@ export default function GeneralInfo(shop: Props) {
             justifyContent: "space-between",
           }}
         >
-          <DrawerHeader />
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "0.5rem 1rem",
+              }}
+            >
+              <Typography>Đơn đặt chỗ của bạn</Typography>
+              <IconButton size="small" onClick={toggleDrawer(false)}>
+                <CloseRounded />
+              </IconButton>
+            </div>
+            <Divider />
+          </div>
           <DrawerContent>
             <CardCheckout
               style={{ padding: "1rem", display: "flex", gap: "1.25rem" }}
