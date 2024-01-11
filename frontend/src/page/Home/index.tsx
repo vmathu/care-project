@@ -6,28 +6,15 @@ import { Slider } from "./components/Slider";
 
 import { doGet } from "libs/utils/axios";
 
-const ShopGrid = styled(Grid)(({ theme }) => ({
-  margin: "0 80px !important",
-  width: "-webkit-fill-available !important",
-  [theme.breakpoints.down("sm")]: {
-    marginLeft: "0 !important",
-    marginRight: "1rem !important",
-  },
-}));
-
 const ShopScroll = styled(Grid)(({ theme }) => ({
-  margin: "0 80px !important",
   display: "flex",
   flexDirection: "row",
   flexWrap: "nowrap",
   overflowX: "scroll",
-  width: "-webkit-fill-available !important",
   boxSizing: "border-box",
   paddingBottom: "1rem",
   [theme.breakpoints.down("sm")]: {
     flexDirection: "column",
-    marginLeft: "0 !important",
-    marginRight: "1rem !important",
     boxSizing: "border-box",
   },
 }));
@@ -50,15 +37,21 @@ type ShopSectionProps = {
   children: React.ReactNode;
 };
 
+const StyledSection = styled("section")(({ theme }) => ({
+  padding: "0 80px",
+  [theme.breakpoints.down("sm")]: {
+    padding: "0 16px",
+  },
+}));
 const ShopSection = ({ title, children }: ShopSectionProps) => (
-  <section style={{ padding: "0 16px" }}>
+  <StyledSection>
     <Box sx={{ marginBottom: 4, marginTop: 4 }}>
       <Typography variant="h4" align="center">
         {title}
       </Typography>
     </Box>
     {children}
-  </section>
+  </StyledSection>
 );
 
 interface SpacedComponentProps {
@@ -91,7 +84,7 @@ export default function HomePage() {
       <SpacedComponent>
         <ShopSection title="Gợi ý hôm nay">
           <Tab tabItems={tabItems} />
-          <ShopGrid container spacing={{ xs: 2, sm: 4 }}>
+          <Grid container spacing={{ xs: 2, sm: 4 }}>
             {shops.map((shop, id) => {
               const shopData = {
                 ...shop,
@@ -103,7 +96,7 @@ export default function HomePage() {
                 </Grid>
               );
             })}
-          </ShopGrid>
+          </Grid>
         </ShopSection>
       </SpacedComponent>
       <SpacedComponent>
