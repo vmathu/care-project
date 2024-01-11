@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { CustomCard, SearchAppBar, Footer } from "libs/ui";
 import { styled } from "@mui/system";
 import { Grid, Box, Typography } from "@mui/material";
-import { shopImg } from "assets/images";
 import { Tab } from "libs/ui/components";
 import { Slider } from "./components/Slider";
+
+import { doGet } from "libs/utils/axios";
 
 const ShopGrid = styled(Grid)(({ theme }) => ({
   margin: "0 80px !important",
@@ -19,15 +21,12 @@ const ShopScroll = styled(Grid)(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   flexWrap: "nowrap",
-  overflowX: "auto",
+  overflowX: "scroll",
   width: "-webkit-fill-available !important",
   boxSizing: "border-box",
-  "&::-webkit-scrollbar": {
-    display: "none",
-  },
+  paddingBottom: "1rem",
   [theme.breakpoints.down("sm")]: {
     flexDirection: "column",
-    overflowX: "auto",
     marginLeft: "0 !important",
     marginRight: "1rem !important",
     boxSizing: "border-box",
@@ -35,8 +34,8 @@ const ShopScroll = styled(Grid)(({ theme }) => ({
 }));
 
 type Props = {
-  img: string[];
-  fullname: string;
+  imgs: string[];
+  name: string;
   address: {
     street: string;
     district: string;
@@ -45,20 +44,6 @@ type Props = {
   price: string;
   rating: number;
 };
-
-const shop: Props = {
-  img: [shopImg, shopImg],
-  fullname: "Lorem ipsum dolor sit amet",
-  address: {
-    street: "227 Nguyễn Văn Cừ phường 4",
-    district: "quận 5",
-    city: "thành phố Hồ Chí Minh",
-  },
-  price: "35k - 52k",
-  rating: 2.5,
-};
-
-const shops: Props[] = Array(8).fill(shop);
 
 type ShopSectionProps = {
   title: string;
@@ -86,6 +71,19 @@ const SpacedComponent: React.FC<SpacedComponentProps> = ({ children }) => (
 
 export default function HomePage() {
   const tabItems = ["Top đánh giá", "Gần bạn", "Yêu thích"];
+  const [shops, setShops] = useState<Array<Props>>([]);
+
+  useEffect(() => {
+    doGet("shop", {})
+      .then((response) => {
+        const data: Props[] = response.data;
+        return data;
+      })
+      .then((data) => {
+        setShops(data);
+      });
+  }, []);
+
   return (
     <div>
       <SearchAppBar />
@@ -94,18 +92,20 @@ export default function HomePage() {
         <ShopSection title="Gợi ý hôm nay">
           <Tab tabItems={tabItems} />
           <ShopGrid container spacing={{ xs: 2, sm: 4 }}>
-            {shops.slice(0, 8).map((shop, id) => (
-              <Grid item xs={12} sm={3} key={id}>
-                <CustomCard {...shop} />
-              </Grid>
-            ))}
+            {shops.map((shop, id) => {
+              return (
+                <Grid item xs={12} sm={3} key={id}>
+                  <CustomCard {...shop} />
+                </Grid>
+              );
+            })}
           </ShopGrid>
         </ShopSection>
       </SpacedComponent>
       <SpacedComponent>
         <ShopSection title="Đã đến gần đây">
           <ShopScroll item container direction="row" spacing={{ xs: 2, sm: 4 }}>
-            {shops.slice(0, 8).map((shop, id) => (
+            {shops.map((shop, id) => (
               <Grid item xs={12} sm={3} key={id}>
                 <CustomCard {...shop} />
               </Grid>
