@@ -2,7 +2,8 @@ import { styled } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { colors, constants } from "libs/ui";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const SearchWrapper = styled("div")(({ theme }) => ({
   position: "relative",
@@ -49,6 +50,15 @@ type Props = {
 };
 
 export const Search = ({ placeholder, value }: Props) => {
+  const navigate = useNavigate();
+  const [changeVal, setChangeVal] = useState(value);
+  const handleChange = (val: string) => {
+    setChangeVal(val);
+  };
+
+  useEffect(() => {
+    setChangeVal(value);
+  }, [value]);
   return (
     <SearchWrapper>
       <SearchIconWrapper>
@@ -58,8 +68,13 @@ export const Search = ({ placeholder, value }: Props) => {
       </SearchIconWrapper>
       <StyledInputBase
         placeholder={placeholder ?? "Search..."}
-        inputProps={{ "aria-label": "search" }}
-        defaultValue={value}
+        inputProps={{ "aria-label": "search", id: "customSearch" }}
+        value={changeVal}
+        onChange={(e) => handleChange(e.currentTarget.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter")
+            navigate(`/Search?q=${event.currentTarget.value}`);
+        }}
       />
     </SearchWrapper>
   );

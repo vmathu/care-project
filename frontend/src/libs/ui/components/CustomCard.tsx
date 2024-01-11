@@ -19,7 +19,6 @@ const spaceBetween: React.CSSProperties = {
 };
 
 type Props = {
-  id: string;
   imgs: string[];
   name: string;
   address: {
