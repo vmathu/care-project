@@ -15,6 +15,7 @@ import {
 import { useState } from "react";
 import React, { ReactNode } from "react";
 import { colors } from "..";
+import { Link } from "react-router-dom";
 
 interface SampleMenuItemProps {
   icon: ReactNode;
@@ -85,11 +86,13 @@ export default function LetterAvatars() {
           gap: "16px",
         }}
       >
-        <SampleMenuItem
-          icon={<InfoOutlined />}
-          text="Thông tin cơ bản"
-          onClick={handleClose}
-        />
+        <Link to="/Profile/*">
+          <SampleMenuItem
+            icon={<InfoOutlined />}
+            text="Thông tin cơ bản"
+            onClick={handleClose}
+          />
+        </Link>
         <SampleMenuItem
           icon={<FormatListNumbered />}
           text="Đơn đặt chỗ của tôi"
