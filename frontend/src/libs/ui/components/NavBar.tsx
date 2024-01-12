@@ -49,10 +49,10 @@ export const SearchAppBar = ({ value }: props) => {
         ) : (
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <Link to="/SignIn">
-              <Button variant="text">Log in</Button>
+              <Button variant="text">Đăng nhập</Button>
             </Link>
             <Link to="/SignUp">
-              <Button variant="contained">Sign up</Button>
+              <Button variant="contained">Đăng ký</Button>
             </Link>
           </div>
         )}

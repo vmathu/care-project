@@ -79,7 +79,6 @@ export default function Shop() {
     doGet(`shop/${shopId}`, {}).then((res) => {
       const data: ShopProps = res.data;
       setShop(data);
-      console.log(data);
     });
   }, []);
 

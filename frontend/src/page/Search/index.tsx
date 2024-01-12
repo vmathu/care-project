@@ -2,8 +2,10 @@ import { CustomCard, colors, SearchAppBar, Footer } from "libs/ui";
 import { Search, Tag } from "./components";
 import { styled } from "@mui/material/styles";
 import { Grid } from "@mui/material";
+import { OverridableStringUnion } from "@mui/types";
+import { ChipPropsVariantOverrides } from "@mui/material/Chip";
 import { useLoaderData } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { doGet } from "libs/utils/axios";
 import { checkLoginToken } from "libs/utils/sessionHelper";
 
@@ -60,12 +62,15 @@ type Props = {
   };
   price: string;
   rating: number;
+  tag: React.ReactNode[];
 };
 
 export default function SearchPage() {
   if (!checkLoginToken()) window.location.href = "/SignIn";
   let q = useLoaderData();
   const [shops, setShops] = useState<Array<Props>>([]);
+  const [fullShops, setFullShops] = useState<Array<Props>>([]);
+  const [selectedLabels, setLabels] = useState<Array<React.ReactNode>>([]);
 
   useEffect(() => {
     doGet("shop", {})
@@ -75,8 +80,32 @@ export default function SearchPage() {
       })
       .then((data) => {
         setShops(data);
+        setFullShops(data);
       });
   }, []);
+
+  const handleClickTag = (
+    label: React.ReactNode,
+    setChipVariant: React.Dispatch<
+      React.SetStateAction<
+        OverridableStringUnion<"filled" | "outlined", ChipPropsVariantOverrides>
+      >
+    >,
+    chipVariant: any,
+  ) => {
+    setChipVariant(chipVariant == "text" ? "filled" : "text");
+
+    let tmp: React.ReactNode[] = [];
+    chipVariant == "text"
+      ? (tmp = selectedLabels.concat(label))
+      : (tmp = selectedLabels.filter((ele) => ele != label));
+    setLabels(tmp);
+
+    const filterShops = tmp.length
+      ? fullShops.filter((shop) => tmp.every((ele) => shop.tag.includes(ele)))
+      : fullShops;
+    setShops(filterShops);
+  };
 
   return (
     <div style={{ ...rootStyle }}>
@@ -85,7 +114,7 @@ export default function SearchPage() {
       <Search value={q as string} />
       <Tags>
         {labels.map((label, id) => (
-          <Tag label={label} key={id} />
+          <Tag label={label} key={id} onClick={handleClickTag} />
         ))}
       </Tags>
       <ShopGrid container spacing={{ xs: 2, sm: 4 }}>
