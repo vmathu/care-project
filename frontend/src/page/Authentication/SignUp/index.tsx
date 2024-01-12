@@ -197,7 +197,7 @@ export default function SignUp() {
             <img
               src={RegisterBackGround}
               alt="RB"
-              height="100vh"
+              height="100%"
               width="100%"
               style={{ objectFit: "cover" }}
             />
