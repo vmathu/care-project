@@ -1,5 +1,5 @@
-const UserService = require('../service/UserService');
-const RespondStatus = require('../utils/ResponedData').RespondStatus;
+const {UserService} = require('../services');
+
 module.exports = (app) => {
     const service = new UserService();
 
@@ -80,8 +80,4 @@ module.exports = (app) => {
             res.json({ data: 'fail',  message: err.message, status: err.status });
         }
     })
-    
-    app.use((req, res, next) => {
-        res.status(RespondStatus.NOT_FOUND).json({ message: 'API not found' });
-    });
 }

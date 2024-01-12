@@ -1,20 +1,29 @@
-import { ImageList, ImageListItem, Hidden } from "@mui/material";
+import { ImageList, ImageListItem, Hidden, styled } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { cover, image1, image2, image3, image4 } from "../mocks";
+
+const StyledImageList = styled(ImageList)(({ theme }) => ({
+  margin: "0px",
+}));
 
 const useStyles = makeStyles(() => ({
   img: {
     borderRadius: "4px",
   },
 }));
-export default function ImagePreviewer() {
+
+type Props = {
+  src: string[];
+};
+
+export default function ImagePreviewer({ src }: Props) {
   const classes = useStyles();
   return (
     <div>
       <Hidden smDown>
-        <ImageList cols={5} gap={16} rowHeight={110} variant="quilted">
+        <StyledImageList cols={5} gap={16} rowHeight={110} variant="quilted">
           <ImageListItem cols={5} rows={3}>
-            <img className={classes.img} src={cover} alt="cover" />
+            <img className={classes.img} src={src[0]} alt="cover" />
           </ImageListItem>
           <ImageListItem>
             <img className={classes.img} src={image1} alt="image1" />
@@ -31,7 +40,7 @@ export default function ImagePreviewer() {
           <ImageListItem>
             <img className={classes.img} src={cover} alt="image5" />
           </ImageListItem>
-        </ImageList>
+        </StyledImageList>
       </Hidden>
     </div>
   );

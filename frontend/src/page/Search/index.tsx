@@ -2,7 +2,12 @@ import { CustomCard, colors, SearchAppBar, Footer } from "libs/ui";
 import { Search, Tag } from "./components";
 import { styled } from "@mui/material/styles";
 import { Grid } from "@mui/material";
-import { shopImg } from "assets/images";
+import { OverridableStringUnion } from "@mui/types";
+import { ChipPropsVariantOverrides } from "@mui/material/Chip";
+import { useLoaderData } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { doGet } from "libs/utils/axios";
+import { checkLoginToken } from "libs/utils/sessionHelper";
 
 const rootStyle: React.CSSProperties = {
   display: "flex",
@@ -45,18 +50,11 @@ const ShopGrid = styled(Grid)(({ theme }) => ({
   },
 }));
 
-const labels = [
-  "Check in",
-  "Học bài",
-  "Cho quay/ chụp",
-  "Label",
-  "Label",
-  "Label",
-];
+const labels = ["Check in", "Học bài", "Cho quay/ chụp", "Mang đồ ăn ngoài"];
 
 type Props = {
-  img: string[];
-  fullname: string;
+  imgs: string[];
+  name: string;
   address: {
     street: string;
     district: string;
@@ -64,123 +62,76 @@ type Props = {
   };
   price: string;
   rating: number;
+  tag: React.ReactNode[];
 };
-const shops: Props[] = [
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-  {
-    img: [shopImg, shopImg],
-    fullname: "Lorem ipsum dolor sit amet",
-    address: {
-      street: "227 Nguyễn Văn Cừ phường 4",
-      district: "quận 5",
-      city: "thành phố Hồ Chí Minh",
-    },
-    price: "35k - 52k",
-    rating: 2.5,
-  },
-];
 
 export default function SearchPage() {
+  if (!checkLoginToken()) window.location.href = "/SignIn";
+  let q = useLoaderData();
+  const [shops, setShops] = useState<Array<Props>>([]);
+  const [fullShops, setFullShops] = useState<Array<Props>>([]);
+  const [selectedLabels, setLabels] = useState<Array<React.ReactNode>>([]);
+
+  useEffect(() => {
+    doGet("shop", {})
+      .then((response) => {
+        const data: Props[] = response.data;
+        return data;
+      })
+      .then((data) => {
+        setShops(data);
+        setFullShops(data);
+      });
+  }, []);
+
+  const handleClickTag = (
+    label: React.ReactNode,
+    setChipVariant: React.Dispatch<
+      React.SetStateAction<
+        OverridableStringUnion<"filled" | "outlined", ChipPropsVariantOverrides>
+      >
+    >,
+    chipVariant: any,
+  ) => {
+    setChipVariant(chipVariant == "text" ? "filled" : "text");
+
+    let tmp: React.ReactNode[] = [];
+    chipVariant == "text"
+      ? (tmp = selectedLabels.concat(label))
+      : (tmp = selectedLabels.filter((ele) => ele != label));
+    setLabels(tmp);
+
+    const filterShops = tmp.length
+      ? fullShops.filter((shop) => tmp.every((ele) => shop.tag.includes(ele)))
+      : fullShops;
+    setShops(filterShops);
+  };
+
   return (
     <div style={{ ...rootStyle }}>
-      <SearchAppBar />
+      <SearchAppBar value={q as string} />
       <div style={{ ...recStyle }}></div>
-      <Search />
+      <Search value={q as string} />
       <Tags>
         {labels.map((label, id) => (
-          <Tag label={label} key={id} />
+          <Tag label={label} key={id} onClick={handleClickTag} />
         ))}
       </Tags>
       <ShopGrid container spacing={{ xs: 2, sm: 4 }}>
         {shops.map((shop, id) => (
           <Grid item xs={12} sm={3} key={id}>
-            <CustomCard
-              img={shop.img}
-              fullname={shop.fullname}
-              address={shop.address}
-              price={shop.price}
-              rating={shop.rating}
-            />
+            <CustomCard {...shop} />
           </Grid>
         ))}
       </ShopGrid>
-      <div style={{ marginTop: "60px" }}>
+      <div
+        style={{
+          width: "100%",
+          marginTop: shops.length > 5 ? "60px" : 0,
+          position: shops.length < 5 ? "absolute" : "relative",
+          bottom: 0,
+        }}
+      >
         <Footer />
       </div>
     </div>
