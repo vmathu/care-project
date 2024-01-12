@@ -123,7 +123,7 @@ export default function SignIn() {
             <img
               src={RegisterBackGround}
               alt="RB"
-              height="100%"
+              height="100vh"
               width="100%"
               style={{ objectFit: "cover" }}
             />

@@ -2,13 +2,14 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  Typography,
   useTheme,
   useMediaQuery,
   Box,
 } from "@mui/material";
 import {
-  InfoOutlined,
-  FormatListNumbered,
+  Person,
+  Menu as MenuIcon,
   Favorite,
   Logout,
 } from "@mui/icons-material";
@@ -16,6 +17,7 @@ import { useState } from "react";
 import React, { ReactNode } from "react";
 import { colors } from "..";
 import { Link } from "react-router-dom";
+import { deleteLoginData } from "libs/utils/sessionHelper";
 
 interface SampleMenuItemProps {
   icon: ReactNode;
@@ -41,7 +43,7 @@ const SampleMenuItem: React.FC<SampleMenuItemProps> = ({
     <Box sx={{ paddingRight: "16px", display: "flex", alignItems: "center" }}>
       {icon}
     </Box>
-    {text}
+    <Typography>{text}</Typography>
   </MenuItem>
 );
 
@@ -69,7 +71,10 @@ export default function LetterAvatars() {
         }}
         onClick={handleClick}
       >
-        demo
+        <img
+          style={{ height: "100%", width: "100%" }}
+          src="https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?q=80&w=2200&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        />
       </Avatar>
       <Box
         component={Menu}
@@ -86,27 +91,34 @@ export default function LetterAvatars() {
           gap: "16px",
         }}
       >
-        <Link to="/Profile/*">
+        <Link to="/Profile">
           <SampleMenuItem
-            icon={<InfoOutlined />}
+            icon={<Person />}
             text="Thông tin cơ bản"
             onClick={handleClose}
           />
         </Link>
-        <SampleMenuItem
-          icon={<FormatListNumbered />}
-          text="Đơn đặt chỗ của tôi"
-          onClick={handleClose}
-        />
-        <SampleMenuItem
-          icon={<Favorite />}
-          text="Quán yêu thích"
-          onClick={handleClose}
-        />
+        <Link to="/Profile/MyOrder">
+          <SampleMenuItem
+            icon={<MenuIcon />}
+            text="Đơn đặt chỗ của tôi"
+            onClick={handleClose}
+          />
+        </Link>
+        <Link to="/Profile/MyFavorite">
+          <SampleMenuItem
+            icon={<Favorite />}
+            text="Quán yêu thích"
+            onClick={handleClose}
+          />
+        </Link>
         <SampleMenuItem
           icon={<Logout />}
           text="Đăng xuất"
-          onClick={handleClose}
+          onClick={() => {
+            deleteLoginData();
+            window.location.href = "/HomePage";
+          }}
         />
       </Box>
     </div>

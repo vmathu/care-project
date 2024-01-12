@@ -1,9 +1,7 @@
-import Grid from "@mui/material/Grid";
-import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/system/Box";
 import { useEffect, useState, useRef } from "react";
 import Colors from "libs/ui/color";
-import { Button, MenuItem, useMediaQuery, useTheme } from "@mui/material";
+import { Button, MenuItem, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { CustomSelect, CustomTextField } from "libs/ui";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "libs/redux/store";
@@ -219,7 +217,12 @@ export default function ViewBasicInfo() {
 
             <Grid item xs={4} lg={2}>
               <Grid container justifyContent="center" alignItems="center">
-                <Skeleton variant="circular" width={160} height={160} />
+                <img
+                  src="https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?q=80&w=2200&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  width={160}
+                  height={160}
+                  style={{ borderRadius: "50%", objectFit: "cover" }}
+                />
               </Grid>
             </Grid>
 
