@@ -124,7 +124,14 @@ export default function SearchPage() {
           </Grid>
         ))}
       </ShopGrid>
-      <div style={{ marginTop: "60px" }}>
+      <div
+        style={{
+          width: "100%",
+          marginTop: shops.length > 5 ? "60px" : 0,
+          position: shops.length < 5 ? "absolute" : "relative",
+          bottom: 0,
+        }}
+      >
         <Footer />
       </div>
     </div>
